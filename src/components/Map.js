@@ -14,44 +14,41 @@ import Distance from "./Distance";
 // type MapOptions = google.maps.MapOptions;
 
 export default function Map() {
-  const [office, setOffice] = useState();
-  const [directions, setDirections] = useState();
-  const mapRef = useRef();
-  const center = useMemo(
-    () => ({ lat: 43.45, lng: -80.49 }),
-    []
-  );
+  const center = useMemo(() => ({ lat: 43, lng: -80 }), []);
+  const [office, setOffice] = useState(center); // office would be {lat:xxx, lng: xxx} (LatLngLiteral)
+  const [directions, setDirections] = useState()
+
   const options = useMemo(
     () => ({
-      mapId: "b181cac70f27f5e6",
+      mapId: "331fbe194ea4838c",
+      // disable default ui, icon
       disableDefaultUI: true,
       clickableIcons: false,
     }),
     []
   );
+  const mapRef = useRef(); // Google Map ref
   const onLoad = useCallback((map) => (mapRef.current = map), []);
-  const houses = useMemo(() => generateHouses(center), [center]);
-
-  const fetchDirections = (house) => {
-    if (!office) return;
-
+  const houses = useMemo(() => generateHouses(office), [office]);
+  console.log({ houses });
+  const fetchDirection = house => {
+    if (!office) return
     // eslint-disable-next-line no-undef
-    const service = new google.maps.DirectionsService();
+    const service = new google.maps.DirectionsService()
     service.route(
       {
         origin: house,
         destination: office,
         // eslint-disable-next-line no-undef
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: google.maps.TravelMode.DRIVING
       },
       (result, status) => {
-        if (status === "OK" && result) {
-          setDirections(result);
+        if (status === "OK") {
+          setDirections(result)
         }
       }
-    );
-  };
-
+    )
+  }
   return (
     <div className="container">
       <div className="controls">
@@ -62,57 +59,54 @@ export default function Map() {
             mapRef.current?.panTo(position);
           }}
         />
-        {!office && <p>Enter the address of your office.</p>}
-        {/* {directions && <Distance leg={directions.routes[0].legs[0]} />} */}
+        {!office && "Please select your office"}
       </div>
       <div className="map">
         <GoogleMap
+          options={options}
           zoom={10}
           center={center}
           mapContainerClassName="map-container"
-          options={options}
           onLoad={onLoad}
         >
-          {directions && (
-            <DirectionsRenderer
-              directions={directions}
-              options={{
-                polylineOptions: {
-                  zIndex: 50,
-                  strokeColor: "#1976D2",
-                  strokeWeight: 5,
-                },
-              }}
-            />
-          )}
-
+          {directions && <DirectionsRenderer directions={directions} options={{
+            polylineOptions: {
+              zIndex: 50,
+              strokeColor: '#d3d3d3',
+              strokeWeight: 5
+            }
+          }} />}
+          {/* Use a beach flag to display the office */}
           {office && (
-            <>
-              <Marker
-                position={office}
-                icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
-              />
-
-              <MarkerClusterer>
-                {(clusterer) =>
-                  houses.map((house) => (
-                    <Marker
-                      key={house.lat}
-                      position={house}
-                      clusterer={clusterer}
-                      onClick={() => {
-                        fetchDirections(house);
-                      }}
-                    />
-                  ))
-                }
-              </MarkerClusterer>
-
-              <Circle center={office} radius={15000} options={closeOptions} />
-              <Circle center={office} radius={30000} options={middleOptions} />
-              <Circle center={office} radius={45000} options={farOptions} />
-            </>
+            <Marker
+              position={office}
+              icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
+            ></Marker>
           )}
+          <MarkerClusterer>
+            {(clusterer) =>
+              houses.map((house) => (
+                <Marker
+                  clusterer={clusterer}
+                  key={house.lat + house.lng}
+                  position={house}
+                  onClick={()=>fetchDirection(house)}
+                ></Marker>
+              ))
+            }
+          </MarkerClusterer>
+          {/* The radius of a Circle is by meters */}
+          <Circle
+            center={office}
+            radius={15000}
+            options={closeOptions}
+          ></Circle>
+          <Circle
+            center={office}
+            radius={30000}
+            options={middleOptions}
+          ></Circle>
+          <Circle center={office} radius={45000} options={farOptions}></Circle>
         </GoogleMap>
       </div>
     </div>
