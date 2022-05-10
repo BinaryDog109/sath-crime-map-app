@@ -1,6 +1,6 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { GoogleMap } from "@react-google-maps/api";
-import { useMemo } from "react";
+import { GoogleMap, Marker } from "@react-google-maps/api";
+import { useEffect, useMemo, useState } from "react";
 
 function initMap(map) {
   // eslint-disable-next-line no-undef
@@ -66,9 +66,93 @@ const locations = [
 ];
 
 export const Map = () => {
+  const [map, setMap] = useState(null);
+  const [currentPos, setCurrentPos] = useState(null);
+  const [crimeData, setCrimeData] = useState(null);
+  async function getCurrentPosition() {
+    return new Promise(async (res, rej) => {
+      const p = new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve(position),
+          (error) => reject(error)
+        );
+      });
+      const position = await p;
+      const positionlat = position.coords.latitude;
+      const positionlon = position.coords.longitude;
+      const currentCoordinate = { lat: positionlat, lng: positionlon };
+      res(currentCoordinate);
+    });
+  }
+  // Initialise the map and its utility
+  useEffect(() => {
+    if (map) {
+      // eslint-disable-next-line no-undef
+      const infoWindow = new google.maps.InfoWindow({
+        content: "",
+        disableAutoPan: true,
+      });
+    }
+  }, [map]);
+  useEffect(() => {
+    const invokeGetPosition = async () => {
+      const currentPosition = await getCurrentPosition();
+      setCurrentPos(currentPosition);
+    };
+    invokeGetPosition();
+  }, []);
+  useEffect(() => {
+    const fetchCrimeData = async () => {
+      const res = await fetch(
+        "https://open-data-cw2-api.azurewebsites.net/api/map/getAllCoordinateByDistance",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify({
+            longitude: currentPos.lng,
+            latitude: currentPos.lat,
+            distance: 1.5,
+          }),
+        }
+      );
+      const json = await res.json();
+      setCrimeData(json);
+    };
+
+    if (currentPos) {
+      fetchCrimeData();
+    }
+  }, [currentPos]);
+  useEffect(() => {
+    if (crimeData) {
+      // console.log({crimeData})
+      // Add some markers to the map.
+      const markers = crimeData.map((crime, i) => {
+        const label = crime.type;
+        // eslint-disable-next-line no-undef
+        const marker = new google.maps.Marker({
+          position: { lng: +crime.longitude, lat: +crime.latitude },
+          label,
+        });
+
+        return marker;
+      });
+
+      // Add a marker clusterer to manage the markers.
+      const cluster = new MarkerClusterer({
+        markers,
+        map,
+        // onClusterClick: (a, b, c) => console.log(a, b, c),
+      });
+    }
+  }, [crimeData, map]);
+
   const options = useMemo(
     () => ({
-      mapId: "331fbe194ea4838c",
+      // mapId: "331fbe194ea4838c",
       // disable default ui, icon
       disableDefaultUI: true,
       clickableIcons: false,
@@ -77,15 +161,20 @@ export const Map = () => {
   );
   return (
     <GoogleMap
-    options={options}
+      options={options}
       mapContainerStyle={{
         width: "100%",
-        height: `${window.innerHeight}px`
+        height: `100%`,
+        // height: '500px'
       }}
-      onLoad={(map) => {}}
+      onLoad={(map) => {
+        setMap(map);
+      }}
       // id="marker-example"
-      zoom={10}
-      center={{ lat: -28.024, lng: 140.887 }}
-    ></GoogleMap>
-  ); 
+      zoom={15}
+      center={currentPos}
+    >
+      <Marker position={currentPos} label="You" />
+    </GoogleMap>
+  );
 };

@@ -1,4 +1,5 @@
 import { useLoadScript } from "@react-google-maps/api";
+import AnotherTest from "../components/AnotherTest";
 import Map from "../components/Map";
 import {MapWithMarkerClusterer} from "../components/MapClusterTest";
 import { MapPage } from "./MapPage/MapPage";

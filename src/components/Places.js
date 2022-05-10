@@ -26,13 +26,14 @@ export default function Places({ setOffice }) {
   } = usePlacesAutocomplete();
   //   console.log({status}, {data})
   const handleSelect = async (val) => {
+    console.log({val})
       setValue(val, false)
       clearSuggestions()
 
       const results = await getGeocode({address: val})
       console.log({results})
       const {lat, lng} = await getLatLng(results[0])
-        setOffice({lat, lng})
+        // setOffice({lat, lng})
   }
   return (
     <Combobox onSelect={handleSelect}>

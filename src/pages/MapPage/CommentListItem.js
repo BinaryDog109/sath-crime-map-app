@@ -1,40 +1,42 @@
-import { Box, Center, Icon, Image, Text } from "@chakra-ui/react"
-import { Divider } from "@mui/material"
+// import { Box, Center, Divider, Icon, Image, Text } from "@chakra-ui/react"
+
+import { Text } from "@chakra-ui/react"
+import { Divider, Typography } from "@mui/material"
+import { Box } from "@mui/system"
+
 
 export const CommentListItem = ({data}) => {
   return (
     <>
-      <Box p={4} display={{ md: "flex" }}>
+      <Box my={1} display={{ md: "flex" }}>
         
-        <Box textAlign={"left"} mt={{ base: 4, md: 0 }} ml={{ md: 6 }}>
+        <Box textAlign={"left"} >
           <Text
+            mb={2}
             fontWeight="bold"
             textTransform="uppercase"
-            fontSize="sm"
             letterSpacing="wide"
-            color="teal.600"
+            noOfLines={1}
           >
-            User: Ty
+            Title
+          </Text>
+          
+          <Text noOfLines={3} color="gray.500">
+            { "Description"}
           </Text>
           <Text
-            mt={1}
-            display="block"
-            fontSize="lg"
+            m={0}
+            color="gray"
+            variant="body2"
             lineHeight="normal"
             fontWeight="semibold"
-            href="#"
           >
-            { "Unknown name"}
-          </Text>
-          <Text noOfLines={3} mt={2} color="gray.500">
-            { "Description"}
+            { "By Unknown name"}
           </Text>
         </Box>
         
       </Box>
-      <Center>
-        <Divider w={"80%"} orientation="horizontal" />
-      </Center>
+      <Divider></Divider>
     </>
   )
 }

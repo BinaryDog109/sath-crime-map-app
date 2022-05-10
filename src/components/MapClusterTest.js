@@ -37,12 +37,12 @@ function initMap(map) {
     onClusterClick: (a, b, c) => console.log(a, b, c),
   });
   // eslint-disable-next-line no-undef
-  google.maps.event.addListener(cluster, "clusterclick", function (cluster) {
-    var center = cluster.getCenter();
-    var size = cluster.getSize();
-    var markers = cluster.getMarkers();
-    console.log(center, size);
-  });
+  // google.maps.event.addListener(cluster, "clusterclick", function (cluster) {
+  //   var center = cluster.getCenter();
+  //   var size = cluster.getSize();
+  //   var markers = cluster.getMarkers();
+  //   console.log(center, size);
+  // });
 }
 
 const locations = [

@@ -1,44 +1,64 @@
-import { Box } from "@chakra-ui/react";
-import {
-  Combobox,
-  ComboboxInput,
-  ComboboxList,
-  ComboboxOption,
-  ComboboxPopover,
-} from "@reach/combobox";
-import usePlacesAutocomplete from "use-places-autocomplete";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
-export const SearchPlaces = () => {
+import { useState } from "react";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
+
+export function SearchPlaces({ setPlace }) {
+  //   places library is required for this hook
   const {
     ready,
     value,
     setValue,
     suggestions: { status, data },
-    clearSuggestions,
   } = usePlacesAutocomplete();
+  const [open, setOpen] = useState(false);
+  const handleSelect = async (e, data) => {
+    if (!data) return;
+    setValue(data.description, false);
+    console.log("select", data.description);
+    const results = await getGeocode({ address: data.description });
+    const {lat, lng} = await getLatLng(results[0])
+    console.log({lat, lng})
+    //   setOffice({lat, lng})
+  };
   return (
-    <Box pos={"fixed"} top={5}>
-      <Combobox
-        onSelect={() => {
-          clearSuggestions();
-        }}
-      >
-        <ComboboxInput
+    <Autocomplete
+      onChange={handleSelect}
+      open={open}
+      onOpen={() => {
+        setOpen(true);
+      }}
+      onClose={() => {
+        setOpen(false);
+      }}
+      getOptionLabel={(option) => option.description}
+      options={data}
+      loading={!ready}
+      renderInput={(params) => (
+        <TextField
+          fullWidth
+          size="small"
+          variant="filled"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          disabled={!ready}
-          className="combobox-input"
-          placeholder="Type a destination"
+          {...params}
+          label="Search where you want to go"
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {!ready ? (
+                  <CircularProgress color="inherit" size={20} />
+                ) : null}
+                {params.InputProps.endAdornment}
+              </>
+            ),
+          }}
         />
-        <ComboboxPopover>
-          <ComboboxList>
-            {status === "OK" &&
-              data.map(({ place_id, description }) => (
-                <ComboboxOption key={place_id} value={description} />
-              ))}
-          </ComboboxList>
-        </ComboboxPopover>
-      </Combobox>
-    </Box>
+      )}
+    />
   );
-};
+}

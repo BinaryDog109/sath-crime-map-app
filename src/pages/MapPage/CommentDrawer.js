@@ -26,7 +26,7 @@ const Puller = styled(Box)(({ theme }) => ({
 
 export function CommentDrawer(props) {
   const [open, setOpen] = useState(false);
-
+  console.log({ open });
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -40,67 +40,54 @@ export function CommentDrawer(props) {
           },
         }}
       />
-      <Box onClick={toggleDrawer(!open)}>
-        {
-          <SwipeableDrawer
-            anchor="bottom"
-            open={open}
-            onClose={toggleDrawer(false)}
-            onOpen={toggleDrawer(true)}
-            swipeAreaWidth={drawerBleeding}
-            disableSwipeToOpen={false}
-            ModalProps={{
-              keepMounted: true,
-              disablePortal: true,
+      <Box className="yty" onClick={toggleDrawer(!open)}>
+        <SwipeableDrawer
+          anchor="bottom"
+          open={open}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+          swipeAreaWidth={drawerBleeding}
+          disableSwipeToOpen={false}
+          ModalProps={{
+            keepMounted: true,
+          }}
+        >
+          <StyledBox
+            sx={{
+              position: "absolute",
+              top: -drawerBleeding,
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              visibility: "visible",
+              right: 0,
+              left: 0,
+              
             }}
           >
-            <StyledBox
-              sx={{
-                position: "absolute",
-                top: -drawerBleeding,
-                borderTopLeftRadius: 8,
-                borderTopRightRadius: 8,
-                visibility: "visible",
-                right: 0,
-                left: 0,
-              }}
-            >
-              <Puller />
-              <Typography sx={{ p: 2, color: "text.secondary" }}>
-                51 results
-              </Typography>
-            </StyledBox>
-            <StyledBox
-              sx={{
-                px: 2,
-                pb: 2,
-                height: "100%",
-                overflow: "auto",
-              }}
-            >
-              <List>
-                <Link>
-                  <ListItem
-                    borderRadius={"md"}
-                    _hover={{ bg: "gray.200" }}
-                    className="restaurant-item"
-                    listStyleType={"none"}
-                  >
-                    <CommentListItem />
-                  </ListItem>
-                  <ListItem
-                    borderRadius={"md"}
-                    _hover={{ bg: "gray.200" }}
-                    className="restaurant-item"
-                    listStyleType={"none"}
-                  >
-                    <CommentListItem />
-                  </ListItem>
-                </Link>
-              </List>
-            </StyledBox>
-          </SwipeableDrawer>
-        }
+            <Puller />
+            <Typography sx={{ p: 2, color: "text.secondary" }}>
+              51 results
+            </Typography>
+          </StyledBox>
+          {/* Content */}
+          <StyledBox
+            sx={{
+              px: 2,
+              pb: 2,
+              height: "100%",
+              overflow: "auto",
+            }}
+          >
+            <List p={0}>
+              <ListItem className="restaurant-item" listStyleType={"none"}>
+                <CommentListItem />
+              </ListItem>
+              <ListItem className="restaurant-item" listStyleType={"none"}>
+                <CommentListItem />
+              </ListItem>
+            </List>
+          </StyledBox>
+        </SwipeableDrawer>
       </Box>
     </>
   );
