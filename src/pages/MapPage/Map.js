@@ -1,43 +1,10 @@
+import { Box } from "@chakra-ui/react";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { GoogleMap, Marker } from "@react-google-maps/api";
-import { useEffect, useMemo, useState } from "react";
-
-function initMap(map) {
-  // eslint-disable-next-line no-undef
-  const infoWindow = new google.maps.InfoWindow({
-    content: "",
-    disableAutoPan: true,
-  });
-
-  // Create an array of alphabetical characters used to label the markers.
-  const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-  // Add some markers to the map.
-  const markers = locations.map((position, i) => {
-    const label = labels[i % labels.length];
-    // eslint-disable-next-line no-undef
-    const marker = new google.maps.Marker({
-      position,
-      label,
-    });
-
-    // markers can only be keyboard focusable when they have click listeners
-    // open info window when marker is clicked
-    marker.addListener("click", () => {
-      infoWindow.setContent(label);
-      infoWindow.open(map, marker);
-    });
-
-    return marker;
-  });
-
-  // Add a marker clusterer to manage the markers.
-  new MarkerClusterer({
-    markers,
-    map,
-    onClusterClick: (a, b, c) => console.log(a, b, c),
-  });
-}
+import { Paper } from "@mui/material";
+import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { LoadingModal } from "./LoadingModal";
+import { SearchPlaces } from "./SearchPlaces";
 
 const locations = [
   { lat: -31.56391, lng: 147.154312 },
@@ -65,10 +32,13 @@ const locations = [
   { lat: -43.999792, lng: 170.463352 },
 ];
 
-export const Map = () => {
+export const Map = ({ dest }) => {
   const [map, setMap] = useState(null);
+  const [open, setOpen] = useState(false); // The loading modal
   const [currentPos, setCurrentPos] = useState(null);
   const [crimeData, setCrimeData] = useState(null);
+  const [directions, setDirections] = useState();
+
   async function getCurrentPosition() {
     return new Promise(async (res, rej) => {
       const p = new Promise((resolve, reject) => {
@@ -84,14 +54,17 @@ export const Map = () => {
       res(currentCoordinate);
     });
   }
+
   // Initialise the map and its utility
   useEffect(() => {
+    setOpen(true);
     if (map) {
       // eslint-disable-next-line no-undef
       const infoWindow = new google.maps.InfoWindow({
         content: "",
         disableAutoPan: true,
       });
+      setOpen(false);
     }
   }, [map]);
   useEffect(() => {
@@ -102,7 +75,7 @@ export const Map = () => {
     invokeGetPosition();
   }, []);
   useEffect(() => {
-    const fetchCrimeData = async () => {
+    const fetchCrimeData = async (km = 1.5) => {
       const res = await fetch(
         "https://open-data-cw2-api.azurewebsites.net/api/map/getAllCoordinateByDistance",
         {
@@ -114,21 +87,26 @@ export const Map = () => {
           body: JSON.stringify({
             longitude: currentPos.lng,
             latitude: currentPos.lat,
-            distance: 1.5,
+            distance: km,
           }),
         }
       );
-      const json = await res.json();
+      let json = await res.json();
+      if (json.length > 500) json = json.slice(0, 500)
       setCrimeData(json);
     };
 
-    if (currentPos) {
-      fetchCrimeData();
+    if (currentPos && directions) {
+
+      const km = (directions.routes[0].legs[0].distance.value) / 1000;
+      // Currently, if passed in dynamic km, the browser will crash
+      console.log({km})
+      fetchCrimeData(km);
     }
-  }, [currentPos]);
+  }, [currentPos, directions]);
   useEffect(() => {
-    if (crimeData) {
-      // console.log({crimeData})
+    if (crimeData && directions) {
+      console.log({ crimeData });
       // Add some markers to the map.
       const markers = crimeData.map((crime, i) => {
         const label = crime.type;
@@ -137,7 +115,7 @@ export const Map = () => {
           position: { lng: +crime.longitude, lat: +crime.latitude },
           label,
         });
-
+        marker.crimeDetail = crime.detail
         return marker;
       });
 
@@ -145,10 +123,14 @@ export const Map = () => {
       const cluster = new MarkerClusterer({
         markers,
         map,
-        // onClusterClick: (a, b, c) => console.log(a, b, c),
+        onClusterClick: (a, b, c) => console.log(a, b, c),
       });
+      setOpen(false);
     }
-  }, [crimeData, map]);
+  }, [crimeData, map, directions]);
+  useEffect(() => {
+    console.log({ directions });
+  }, [directions]);
 
   const options = useMemo(
     () => ({
@@ -160,21 +142,45 @@ export const Map = () => {
     []
   );
   return (
-    <GoogleMap
-      options={options}
-      mapContainerStyle={{
-        width: "100%",
-        height: `100%`,
-        // height: '500px'
-      }}
-      onLoad={(map) => {
-        setMap(map);
-      }}
-      // id="marker-example"
-      zoom={15}
-      center={currentPos}
-    >
-      <Marker position={currentPos} label="You" />
-    </GoogleMap>
+    <>
+      <Box position="absolute" left={0} top={0} h={window.innerHeight} w="100%">
+        <GoogleMap
+          options={options}
+          mapContainerStyle={{
+            width: "100%",
+            height: `100%`,
+            // height: '500px'
+          }}
+          onLoad={(map) => {
+            setMap(map);
+          }}
+          // id="marker-example"
+          zoom={15}
+          center={currentPos}
+        >
+          <Marker position={currentPos} label="You" />
+          {directions && (
+            <DirectionsRenderer
+              directions={directions}
+              options={{
+                polylineOptions: {
+                  zIndex: 50,
+                  strokeColor: "orange",
+                  strokeWeight: 5,
+                },
+              }}
+            />
+          )}
+        </GoogleMap>
+      </Box>
+      <Paper sx={{ mt: 2, zIndex: 1, backgroundColor: "#fff", width: "80%" }}>
+        <SearchPlaces
+          setLoadingOpen={setOpen}
+          currentPos={currentPos}
+          setDirections={setDirections}
+        />
+      </Paper>
+      <LoadingModal open={open} />
+    </>
   );
 };

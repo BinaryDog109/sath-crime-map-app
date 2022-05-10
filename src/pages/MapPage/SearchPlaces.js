@@ -1,12 +1,34 @@
 import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
 
-export function SearchPlaces({ setPlace }) {
+export function SearchPlaces({ currentPos, setDirections, setLoadingOpen }) {
+  const fetchDirection = useCallback(
+    (destination) => {
+      if (!currentPos) return;
+      setLoadingOpen(true)
+      // eslint-disable-next-line no-undef
+      const service = new google.maps.DirectionsService();
+      service.route(
+        {
+          origin: currentPos,
+          destination: destination,
+          // eslint-disable-next-line no-undef
+          travelMode: google.maps.TravelMode.WALKING,
+        },
+        (result, status) => {
+          if (status === "OK") {
+            setDirections(result);
+          }
+        }
+      );
+    },
+    [currentPos, setDirections, setLoadingOpen]
+  );
   //   places library is required for this hook
   const {
     ready,
@@ -20,9 +42,8 @@ export function SearchPlaces({ setPlace }) {
     setValue(data.description, false);
     console.log("select", data.description);
     const results = await getGeocode({ address: data.description });
-    const {lat, lng} = await getLatLng(results[0])
-    console.log({lat, lng})
-    //   setOffice({lat, lng})
+    const coords = await getLatLng(results[0]);
+    fetchDirection(coords);
   };
   return (
     <Autocomplete
@@ -50,9 +71,7 @@ export function SearchPlaces({ setPlace }) {
             ...params.InputProps,
             endAdornment: (
               <>
-                {!ready ? (
-                  <CircularProgress color="inherit" size={20} />
-                ) : null}
+                {!ready ? <CircularProgress color="inherit" size={20} /> : null}
                 {params.InputProps.endAdornment}
               </>
             ),
