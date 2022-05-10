@@ -1,5 +1,6 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap } from "@react-google-maps/api";
+import { useMemo } from "react";
 
 function initMap(map) {
   // eslint-disable-next-line no-undef
@@ -31,17 +32,10 @@ function initMap(map) {
   });
 
   // Add a marker clusterer to manage the markers.
-  const cluster = new MarkerClusterer({
+  new MarkerClusterer({
     markers,
     map,
     onClusterClick: (a, b, c) => console.log(a, b, c),
-  });
-  // eslint-disable-next-line no-undef
-  google.maps.event.addListener(cluster, "clusterclick", function (cluster) {
-    var center = cluster.getCenter();
-    var size = cluster.getSize();
-    var markers = cluster.getMarkers();
-    console.log(center, size);
   });
 }
 
@@ -71,14 +65,27 @@ const locations = [
   { lat: -43.999792, lng: 170.463352 },
 ];
 
-export const MapWithMarkerClusterer = () => {
+export const Map = () => {
+  const options = useMemo(
+    () => ({
+      mapId: "331fbe194ea4838c",
+      // disable default ui, icon
+      disableDefaultUI: true,
+      clickableIcons: false,
+    }),
+    []
+  );
   return (
     <GoogleMap
-      mapContainerClassName="map-container"
-      onLoad={(map) => initMap(map)}
-      id="marker-example"
-      zoom={3}
+    options={options}
+      mapContainerStyle={{
+        width: "100%",
+        height: `${window.innerHeight}px`
+      }}
+      onLoad={(map) => {}}
+      // id="marker-example"
+      zoom={10}
       center={{ lat: -28.024, lng: 140.887 }}
     ></GoogleMap>
-  );
+  ); 
 };
