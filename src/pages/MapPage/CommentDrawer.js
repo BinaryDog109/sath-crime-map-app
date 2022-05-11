@@ -7,7 +7,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { useState } from "react";
 import { Link, List, ListItem } from "@chakra-ui/react";
 import { CommentListItem } from "./CommentListItem";
-import { Chip } from "@mui/material";
+import { Chip, Divider, Skeleton } from "@mui/material";
 
 const drawerBleeding = 56;
 
@@ -26,23 +26,25 @@ const Puller = styled(Box)(({ theme }) => ({
 }));
 
 export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
-  console.log({ selectedMarkers });
+  console.log({ selectedMarkers, overflow });
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-
+ 
   return (
     <>
       <Global
         styles={{
           ".MuiDrawer-root > .MuiPaper-root": {
-            overflow: `${overflow}`,
+            height: `calc(50% - ${drawerBleeding}px)`,
+            overflow: overflow,
           },
         }}
       />
       <Box className="yty" onClick={toggleDrawer(!open)}>
         <SwipeableDrawer
+          container={document.body}
           anchor="bottom"
           open={open}
           onClose={toggleDrawer(false)}
@@ -62,13 +64,13 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
               visibility: "visible",
               right: 0,
               left: 0,
-              // bottom: 0,
-              
             }}
           >
             <Puller />
+            <Typography sx={{ p: 2, color: "text.secondary" }}>
+              Labels and comments
+            </Typography>
           </StyledBox>
-          {/* Content */}
           <StyledBox
             sx={{
               px: 2,
@@ -87,6 +89,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
                   />
                 ))}
             </Box>
+            <Divider></Divider>
             <List p={0}>
               <ListItem className="restaurant-item" listStyleType={"none"}>
                 <CommentListItem />
@@ -98,6 +101,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
           </StyledBox>
         </SwipeableDrawer>
       </Box>
+      
     </>
   );
 }
