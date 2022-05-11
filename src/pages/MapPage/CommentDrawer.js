@@ -48,7 +48,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
       />
       <Box
         onClick={(e) => {
-          if (!e.target.closest(".drawer-content")) setOpen(!open);
+          if (!e.target.closest(".drawer-content") ) setOpen(!open);
         }}
       >
         <SwipeableDrawer
@@ -74,6 +74,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
               left: 0,
             }}
           >
+            {/* This is the gray capsule above the title */}
             <Puller />
             <Typography sx={{ p: 2, color: "text.secondary" }}>
               Labels and comments

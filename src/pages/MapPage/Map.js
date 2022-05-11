@@ -91,7 +91,9 @@ export const Map = ({ setSelectedMarkers }) => {
         });
         // Use an array so that it will have a common interface
         marker.addListener("click", (e) => setSelectedMarkers([marker]));
+        // Adding additional properties
         marker.crimeDetail = crime.detail;
+        marker.crimeId = crime.id
         return marker;
       });
 
