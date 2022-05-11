@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { Paper } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LoadingModal } from "./LoadingModal";
@@ -12,6 +12,7 @@ export const Map = ({ dest }) => {
   const [currentPos, setCurrentPos] = useState(null);
   const [crimeData, setCrimeData] = useState(null);
   const [directions, setDirections] = useState();
+  const [mapHeading, setMapHeading] = useState();
 
   async function getCurrentPosition() {
     return new Promise(async (res, rej) => {
@@ -123,14 +124,24 @@ export const Map = ({ dest }) => {
     }
   }, [crimeData, map, directions]);
   useEffect(() => {
-    console.log({ directions });
-  }, [directions]);
+    // After directions have been set, face the target
+    if (directions) {
+      const origin = directions.request.origin.location.toJSON();
+      const destination = directions.request.destination.location.toJSON();
+      // eslint-disable-next-line no-undef
+      const heading = google.maps.geometry.spherical.computeHeading(
+        origin,
+        destination
+      );
+      setMapHeading(heading);
+    }
+  }, [directions, map]);
 
   const options = useMemo(
     () => ({
       // mapId: "331fbe194ea4838c",
       // disable default ui, icon
-      mapId: "4dc76fada40f41c4",
+      mapId: "4dc76fada40f41c4", // Vector, rotate and tilt
       disableDefaultUI: true,
       clickableIcons: false,
     }),
@@ -148,75 +159,8 @@ export const Map = ({ dest }) => {
                 height: `100%`,
                 // height: '500px'
               }}
-              heading={320}
               onLoad={(map) => {
                 setMap(map);
-                const buttons = [
-                  // eslint-disable-next-line no-undef
-                  [
-                    "Rotate Left",
-                    "rotate",
-                    20,
-                    // eslint-disable-next-line no-undef
-                    google.maps.ControlPosition.LEFT_CENTER,
-                  ],
-                  // eslint-disable-next-line no-undef
-                  [
-                    "Rotate Right",
-                    "rotate",
-                    -20,
-                    // eslint-disable-next-line no-undef
-                    google.maps.ControlPosition.RIGHT_CENTER,
-                  ],
-                  // eslint-disable-next-line no-undef
-                  [
-                    "Tilt Down",
-                    "tilt",
-                    20,
-                    // eslint-disable-next-line no-undef
-                    google.maps.ControlPosition.TOP_CENTER,
-                  ],
-                  // eslint-disable-next-line no-undef
-                  [
-                    "Tilt Up",
-                    "tilt",
-                    -20,
-                    // eslint-disable-next-line no-undef
-                    google.maps.ControlPosition.BOTTOM_CENTER,
-                  ],
-                ];
-
-                buttons.forEach(([text, mode, amount, position]) => {
-                  const controlDiv = document.createElement("div");
-                  const controlUI = document.createElement("button");
-
-                  controlUI.classList.add("ui-button");
-                  controlUI.innerText = `${text}`;
-                  controlUI.addEventListener("click", () => {
-                    adjustMap(mode, amount);
-                  });
-                  controlDiv.appendChild(controlUI);
-                  map.controls[position].push(controlDiv);
-                });
-
-                const adjustMap = function (mode, amount) {
-                  console.log({
-                    mode,
-                    amount,
-                    heading: map.getHeading(),
-                    tilt: map.getTilt(),
-                  });
-                  switch (mode) {
-                    case "tilt":
-                      map.setTilt(map.getTilt() + amount);
-                      break;
-                    case "rotate":
-                      map.setHeading(map.getHeading() + amount);
-                      break;
-                    default:
-                      break;
-                  }
-                };
               }}
               // id="marker-example"
               zoom={15}
