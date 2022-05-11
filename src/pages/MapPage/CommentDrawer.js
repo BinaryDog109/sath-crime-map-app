@@ -35,7 +35,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-  
+
   return (
     <>
       <Global
@@ -48,7 +48,8 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
       />
       <Box
         onClick={(e) => {
-          if (!e.target.closest(".drawer-content") ) setOpen(!open);
+          if (e.target.closest("[id='menu-']")) return;
+          if (!e.target.closest(".drawer-content")) setOpen(!open);
         }}
       >
         <SwipeableDrawer
@@ -91,7 +92,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
           >
             <CommentDrawerTabs tabNames={["Details", "Comments", "Stats"]}>
               <CrimeDetailChips selectedMarkers={selectedMarkers} />
-              <CommentList />
+              <CommentList selectedMarkers={selectedMarkers} />
               <CrimeVictimRaceStats />
             </CommentDrawerTabs>
           </StyledBox>

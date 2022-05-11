@@ -26,7 +26,7 @@ export const LoadingModal = ({open}) => {
           Loading
         </Typography>
         <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-          I collecting the precious data...
+          I am collecting the precious data...
         </Typography>
       </Box>
     </Modal>

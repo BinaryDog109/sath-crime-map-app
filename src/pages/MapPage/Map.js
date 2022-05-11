@@ -94,6 +94,7 @@ export const Map = ({ setSelectedMarkers }) => {
         // Adding additional properties
         marker.crimeDetail = crime.detail;
         marker.crimeId = crime.id
+        marker.crimeLocation = crime.location
         return marker;
       });
 
