@@ -36,7 +36,7 @@ export const CommentListItem = ({data}) => {
         </Box>
         
       </Box>
-      <Divider></Divider>
+      
     </>
   )
 }

@@ -7,7 +7,11 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { useState } from "react";
 import { Link, List, ListItem } from "@chakra-ui/react";
 import { CommentListItem } from "./CommentListItem";
-import { Chip, Divider, Skeleton } from "@mui/material";
+import { Chip, Divider, Skeleton, Tab, Tabs } from "@mui/material";
+import { CrimeDetailChips } from "./CrimeDetailChips";
+import { CommentList } from "./CommentList";
+import { CrimeVictimRaceStats } from "./CrimeVictimRaceStats";
+import { CommentDrawerTabs } from "./CommentDrawerTabs";
 
 const drawerBleeding = 56;
 
@@ -26,12 +30,12 @@ const Puller = styled(Box)(({ theme }) => ({
 }));
 
 export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
-  console.log({ selectedMarkers, overflow });
+  // console.log({ selectedMarkers, overflow });
   const [open, setOpen] = useState(false);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
- 
+  
   return (
     <>
       <Global
@@ -42,7 +46,11 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
           },
         }}
       />
-      <Box className="yty" onClick={toggleDrawer(!open)}>
+      <Box
+        onClick={(e) => {
+          if (!e.target.closest(".drawer-content")) setOpen(!open);
+        }}
+      >
         <SwipeableDrawer
           container={document.body}
           anchor="bottom"
@@ -72,6 +80,7 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
             </Typography>
           </StyledBox>
           <StyledBox
+            className="drawer-content"
             sx={{
               px: 2,
               pb: 2,
@@ -79,29 +88,14 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
               overflow: "auto",
             }}
           >
-            <Box py={2} px={2}>
-              {selectedMarkers &&
-                selectedMarkers.map((marker, index) => (
-                  <Chip
-                    key={index}
-                    sx={{ mr: 1, mt: 1 }}
-                    label={marker.crimeDetail}
-                  />
-                ))}
-            </Box>
-            <Divider></Divider>
-            <List p={0}>
-              <ListItem className="restaurant-item" listStyleType={"none"}>
-                <CommentListItem />
-              </ListItem>
-              <ListItem className="restaurant-item" listStyleType={"none"}>
-                <CommentListItem />
-              </ListItem>
-            </List>
+            <CommentDrawerTabs tabNames={["Details", "Comments", "Stats"]}>
+              <CrimeDetailChips selectedMarkers={selectedMarkers} />
+              <CommentList />
+              <CrimeVictimRaceStats />
+            </CommentDrawerTabs>
           </StyledBox>
         </SwipeableDrawer>
       </Box>
-      
     </>
   );
 }
