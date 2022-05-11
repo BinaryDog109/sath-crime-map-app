@@ -8,14 +8,12 @@ import { CommentDrawer } from "./CommentDrawer";
 import { Map } from "./Map";
 import { SearchPlaces } from "./SearchPlaces";
 export const MapPage = () => {
+  // Select a marker
+  const [selectedMarkers, setSelectedMarkers] = useState(null)
   return (
     <Box display={"flex"} flexDirection="column" alignItems={"center"}>
-      
-        <Map />
-
-      
-
-      <CommentDrawer />
+      <Map setSelectedMarkers={setSelectedMarkers} />
+      <CommentDrawer overflow={selectedMarkers? "visible" : "hidden"} selectedMarkers={selectedMarkers} />
     </Box>
   );
 };

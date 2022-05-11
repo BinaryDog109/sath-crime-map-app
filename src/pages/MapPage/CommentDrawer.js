@@ -7,6 +7,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { useState } from "react";
 import { Link, List, ListItem } from "@chakra-ui/react";
 import { CommentListItem } from "./CommentListItem";
+import { Chip } from "@mui/material";
 
 const drawerBleeding = 56;
 
@@ -24,9 +25,9 @@ const Puller = styled(Box)(({ theme }) => ({
   left: "calc(50% - 15px)",
 }));
 
-export function CommentDrawer(props) {
+export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
+  console.log({ selectedMarkers });
   const [open, setOpen] = useState(false);
-  console.log({ open });
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -36,7 +37,7 @@ export function CommentDrawer(props) {
       <Global
         styles={{
           ".MuiDrawer-root > .MuiPaper-root": {
-            overflow: "visible",
+            overflow: `${overflow}`,
           },
         }}
       />
@@ -61,13 +62,11 @@ export function CommentDrawer(props) {
               visibility: "visible",
               right: 0,
               left: 0,
+              // bottom: 0,
               
             }}
           >
             <Puller />
-            <Typography sx={{ p: 2, color: "text.secondary" }}>
-              51 results
-            </Typography>
           </StyledBox>
           {/* Content */}
           <StyledBox
@@ -78,6 +77,16 @@ export function CommentDrawer(props) {
               overflow: "auto",
             }}
           >
+            <Box py={2} px={2}>
+              {selectedMarkers &&
+                selectedMarkers.map((marker, index) => (
+                  <Chip
+                    key={index}
+                    sx={{ mr: 1, mt: 1 }}
+                    label={marker.crimeDetail}
+                  />
+                ))}
+            </Box>
             <List p={0}>
               <ListItem className="restaurant-item" listStyleType={"none"}>
                 <CommentListItem />

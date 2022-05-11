@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { LoadingModal } from "./LoadingModal";
 import { SearchPlaces } from "./SearchPlaces";
 
-export const Map = ({ dest }) => {
+export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
   const [open, setOpen] = useState(false); // The loading modal
   const [currentPos, setCurrentPos] = useState(null);
@@ -89,6 +89,8 @@ export const Map = ({ dest }) => {
           position: { lng: +crime.longitude, lat: +crime.latitude },
           label,
         });
+        // Use an array so that it will have a common interface
+        marker.addListener("click", (e) => setSelectedMarkers([marker]));
         marker.crimeDetail = crime.detail;
         return marker;
       });
@@ -96,8 +98,12 @@ export const Map = ({ dest }) => {
       // Add a marker clusterer to manage the markers.
       const clusterer = new MarkerClusterer({
         map,
-        markers: [],
-        onClusterClick: (a, b, c) => console.log(a, b, c),
+        markers: markers.filter(
+          (marker) =>
+            marker.getVisible() &&
+            map.getBounds().contains(marker.getPosition())
+        ),
+        onClusterClick: (_, cluster, __) => setSelectedMarkers(cluster.markers),
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
       // eslint-disable-next-line no-undef
@@ -114,6 +120,7 @@ export const Map = ({ dest }) => {
                 map.getBounds().contains(marker.getPosition())
             )
           );
+          // console.log(clusterer.markers);
         }
       );
       setOpen(false);
@@ -122,7 +129,7 @@ export const Map = ({ dest }) => {
         google.maps.event.removeListener(listenerId);
       };
     }
-  }, [crimeData, map, directions]);
+  }, [crimeData, map, directions, setSelectedMarkers]);
   useEffect(() => {
     // After directions have been set, face the target
     if (directions) {
