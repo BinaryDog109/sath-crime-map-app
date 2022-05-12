@@ -1,5 +1,5 @@
 import { Divider, Link, List, ListItem, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import CountUp from "react-countup";
 
 export const CrimeVictimRaceStats = () => {
@@ -24,8 +24,8 @@ export const CrimeVictimRaceStats = () => {
       </Typography>
       <List>
         {stats &&
-          Object.keys(stats).map((ethnicity) => (
-            <>
+          Object.keys(stats).map((ethnicity, index) => (
+            <Fragment key={index}>
               <Divider textAlign="left">{ethnicity}</Divider>
               <ListItem
                 sx={{
@@ -43,7 +43,7 @@ export const CrimeVictimRaceStats = () => {
                 %
                 <Typography ml={"auto"}>of being a victim of crimes</Typography>
               </ListItem>
-            </>
+            </Fragment>
           ))}
       </List>
     </div>
