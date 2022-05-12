@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Grid, Typography, TextField } from '@mui/material'
-
-const outlined = {
-    marginTop: 15, 
-    marginBottom: 15,
-    border: '1px solid rgba(255, 25, 24, 1)',
-}
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
 
 const boxStyle = {
     marginTop: 15, 
@@ -14,54 +8,46 @@ const boxStyle = {
 
 function EthnicityOption(props) {
     const [otherOption, setOtherOption] = useState(false)
-    const [otherEthnicityValue, setOtherEthnicityValue] = useState('')
-    const [selected, setSelected] = useState(false)
+    const [optOut, setOptOut] = useState(false)
 
     useEffect(() => {
         if(props.ethnicity === "Other"){
             // other has been selected
             setOtherOption(true)
         }
+        
+        if(props.ethnicity === "Prefer not to say") {
+            setOptOut(true)
+        }
+
     }, [])
-
-    const handleTextInput = (event) => {
-        setOtherEthnicityValue(event.target.value)
-    }
-
-    const handleSelection = () => {
-        props.setOptionSelected(true)
-        props.setSelectedEthinicity(props.ethnicity)
-        setSelected(!selected)
-        console.log(props.selectedEthnicity)
-    }
 
     if(otherOption) {
         return (
             <Box style={boxStyle}>
-                <Accordion>
-                    <AccordionSummary aria-controls="panel1a-content" id="panel1a-header" >
-                        <Grid container justifyContent="center" alignItems="center">
-                            <Grid item xs={11}><Typography gutterBottom variant="h5" component="div">{props.ethnicity}</Typography></Grid>
-                        </Grid>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <TextField id="other-ethnicity-input" label="Please input your ethnicity" variant="outlined" fullWidth onChange={handleTextInput}/>
-                    </AccordionDetails>
-                </Accordion>
+                <Card>
+                    <Typography gutterBottom variant="h5" component="div">{props.ethnicity}</Typography>
+                </Card>
             </Box>
       );
+    } else if(optOut) {
+        return (
+            <Box style={boxStyle}>
+                <Card>
+                    <Typography gutterBottom variant="h5" component="div">{props.ethnicity}</Typography>
+                </Card>
+            </Box>
+        );
     } else {
         return (
-            <Box style={selected? outlined : boxStyle}>
-                <Card onClick={handleSelection}>
-                    <CardActionArea>
-                        <CardContent>
-                            <Grid container justifyContent="center" alignItems="center">
-                                <Grid item xs={6}><Typography gutterBottom variant="h5" component="div">{props.ethnicity}</Typography></Grid>
-                                <Grid item xs={5}><Typography gutterBottom variant="h4" component="div">{props.emoji}</Typography></Grid>
-                            </Grid>
-                        </CardContent>
-                    </CardActionArea>
+            <Box style={boxStyle}>
+                <Card>
+                    <CardContent>
+                        <Grid container justifyContent="center" alignItems="center">
+                            <Grid item xs={6}><Typography gutterBottom variant="h5" component="div">{props.ethnicity}</Typography></Grid>
+                            <Grid item xs={6}><Typography gutterBottom variant="h6" component="div">{props.emoji}</Typography></Grid>
+                        </Grid>
+                    </CardContent>
                 </Card>
             </Box>
       );
