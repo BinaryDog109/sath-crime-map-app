@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@googlemaps/markerclusterer": "^2.0.6",
+    "@mui/material": "^5.7.0",
+    "@reach/combobox": "^0.16.5",
+    "@react-google-maps/api": "^2.10.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
@@ -24,6 +30,7 @@
     "react-hook-form": "^7.30.0",
     "react-router-dom": "^6.3.0",
     "styled-components": "^5.3.5"
+    "use-places-autocomplete": "^1.11.0",
   },
   "scripts": {
     "start": "react-scripts start",
