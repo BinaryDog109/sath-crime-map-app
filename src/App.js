@@ -2,7 +2,7 @@ import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
 import Register from './pages/register'
 import Login from './pages/login'
 import EthnicitySelect from './pages/EthnicitySelect'
-import {MapPage} from './pages/MapPage'
+import {MapPage} from './pages/MapPage/MapPage'
 function App() {
   return (
     <BrowserRouter>

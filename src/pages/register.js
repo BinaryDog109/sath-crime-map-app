@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 19:01:30
- * @LastEditTime: 2022-05-12 20:31:36
+ * @LastEditTime: 2022-05-12 22:22:35
  * @FilePath: \6214\src\pages\register.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: The meterial version of the login-in page
@@ -32,6 +32,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import { signup, auth, login } from "../util/firebaseAuth"
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../components/navbar'
 
 function Copyright(props) {
 
@@ -149,6 +150,7 @@ export default function SignUp() {
   if (!sessionStorage.getItem('uid')) {
     return (
       <ThemeProvider theme={theme}>
+        <Navbar/>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box

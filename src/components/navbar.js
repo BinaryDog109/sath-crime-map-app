@@ -5,6 +5,7 @@ import MapIcon from '@mui/icons-material/Map'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import LoginIcon from '@mui/icons-material/Login'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
+import { useNavigate } from 'react-router-dom'
 import {
     AppBar,
     Box,
@@ -22,6 +23,7 @@ import {
     Alert, Snackbar
 } from '@mui/material'
 export default function Navbar() {
+    const navigate = useNavigate()
     const [state, setState] = React.useState({
         bottom: false,
     })
@@ -29,10 +31,16 @@ export default function Navbar() {
     const toggleDrawer = (anchor, open) => (event) => {
         setState({ ...state, [anchor]: open })
     }
+    const handleLogin = () =>{
+        navigate('/login')
+    }
+    const handleRegister = () =>{
+        navigate('/register')
+    }
 
     const list = (anchor) => (
         <Box
-            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 200 }}
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 200, zIndex: 1 }}
             role="presentation"
             onClick={toggleDrawer(anchor, false)}
             onKeyDown={toggleDrawer(anchor, false)}
@@ -43,7 +51,7 @@ export default function Navbar() {
                         <ListItemIcon>
                             <LoginIcon />
                         </ListItemIcon>
-                        <ListItemText primary='Login' />
+                        <ListItemText primary='Login' onClick={handleLogin}/>
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
@@ -51,7 +59,7 @@ export default function Navbar() {
                         <ListItemIcon>
                             <HowToRegIcon />
                         </ListItemIcon>
-                        <ListItemText primary='Register' />
+                        <ListItemText primary='Register' onClick={handleRegister}/>
                     </ListItemButton>
                 </ListItem>
             </List>

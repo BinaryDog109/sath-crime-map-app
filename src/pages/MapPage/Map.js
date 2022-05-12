@@ -1,23 +1,23 @@
-import { Box } from "@chakra-ui/react";
-import NavigationIcon from "@mui/icons-material/Navigation";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
-import RouteIcon from "@mui/icons-material/Route";
-import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { Button, Fab, Paper } from "@mui/material";
-import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { LoadingModal } from "./LoadingModal";
-import { SearchPlaces } from "./SearchPlaces";
-import { GoToPremiumAlert } from "./GoToPremiumAlert";
+import { Box } from "@chakra-ui/react"
+import NavigationIcon from "@mui/icons-material/Navigation"
+import MyLocationIcon from "@mui/icons-material/MyLocation"
+import RouteIcon from "@mui/icons-material/Route"
+import { MarkerClusterer } from "@googlemaps/markerclusterer"
+import { Button, Fab, Paper } from "@mui/material"
+import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { LoadingModal } from "./LoadingModal"
+import { SearchPlaces } from "./SearchPlaces"
+import { GoToPremiumAlert } from "./GoToPremiumAlert"
 
 export const Map = ({ setSelectedMarkers }) => {
-  const [map, setMap] = useState(null);
-  const [open, setOpen] = useState(false); // The loading modal
-  const [premiumAlertOpen, setPremiumAlertOpen] = useState(false); // The premium alert modal
-  const [currentPos, setCurrentPos] = useState(null);
-  const [crimeData, setCrimeData] = useState(null);
-  const [directions, setDirections] = useState();
-  const [mapHeading, setMapHeading] = useState();
+  const [map, setMap] = useState(null)
+  const [open, setOpen] = useState(false) // The loading modal
+  const [premiumAlertOpen, setPremiumAlertOpen] = useState(false) // The premium alert modal
+  const [currentPos, setCurrentPos] = useState(null)
+  const [crimeData, setCrimeData] = useState(null)
+  const [directions, setDirections] = useState()
+  const [mapHeading, setMapHeading] = useState()
 
   async function getCurrentPosition() {
     return new Promise(async (res, rej) => {
@@ -25,35 +25,35 @@ export const Map = ({ setSelectedMarkers }) => {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve(position),
           (error) => reject(error)
-        );
-      });
-      const position = await p;
-      const positionlat = position.coords.latitude;
-      const positionlon = position.coords.longitude;
-      const currentCoordinate = { lat: positionlat, lng: positionlon };
-      res(currentCoordinate);
-    });
+        )
+      })
+      const position = await p
+      const positionlat = position.coords.latitude
+      const positionlon = position.coords.longitude
+      const currentCoordinate = { lat: positionlat, lng: positionlon }
+      res(currentCoordinate)
+    })
   }
 
   // Initialise the map and its utility
   useEffect(() => {
-    setOpen(true);
+    setOpen(true)
     if (map) {
       // eslint-disable-next-line no-undef
       const infoWindow = new google.maps.InfoWindow({
         content: "",
         disableAutoPan: true,
-      });
-      setOpen(false);
+      })
+      setOpen(false)
     }
-  }, [map]);
+  }, [map])
   useEffect(() => {
     const invokeGetPosition = async () => {
-      const currentPosition = await getCurrentPosition();
-      setCurrentPos(currentPosition);
-    };
-    invokeGetPosition();
-  }, []);
+      const currentPosition = await getCurrentPosition()
+      setCurrentPos(currentPosition)
+    }
+    invokeGetPosition()
+  }, [])
   useEffect(() => {
     const fetchCrimeData = async (km = 1.5) => {
       const res = await fetch(
@@ -70,42 +70,42 @@ export const Map = ({ setSelectedMarkers }) => {
             distance: km,
           }),
         }
-      );
-      let json = await res.json();
-      if (json.length > 250) json = json.slice(0, 250);
-      setCrimeData(json);
-    };
+      )
+      let json = await res.json()
+      if (json.length > 250) json = json.slice(0, 250)
+      setCrimeData(json)
+    }
 
     if (currentPos && directions) {
-      const km = directions.routes[0].legs[0].distance.value / 1000;
+      const km = directions.routes[0].legs[0].distance.value / 1000
       // Currently, if passed in dynamic km, the browser will crash
-      console.log({ km });
-      fetchCrimeData(km);
+      console.log({ km })
+      fetchCrimeData(km)
     }
-  }, [currentPos, directions]);
+  }, [currentPos, directions])
   useEffect(() => {
     if (crimeData && directions) {
-      console.log({ crimeData });
+      console.log({ crimeData })
       // Add some markers to the map.
       const markers = crimeData.map((crime, i) => {
-        const label = crime.type;
+        const label = crime.type
         // eslint-disable-next-line no-undef
         const marker = new google.maps.Marker({
           position: { lng: +crime.longitude, lat: +crime.latitude },
           label,
-        });
+        })
         // Use an array so that it will have a common interface
         // Notice this is a native event listener, so setting state will be in synchronous order (no batching)
         marker.addListener("click", (e) => {
-          setSelectedMarkers(() => null);
-          setSelectedMarkers(() => [marker]);
-        });
+          setSelectedMarkers(() => null)
+          setSelectedMarkers(() => [marker])
+        })
         // Adding additional properties
-        marker.crimeDetail = crime.detail;
-        marker.crimeId = crime.id;
-        marker.crimeLocation = crime.location;
-        return marker;
-      });
+        marker.crimeDetail = crime.detail
+        marker.crimeId = crime.id
+        marker.crimeLocation = crime.location
+        return marker
+      })
 
       // Add a marker clusterer to manage the markers.
       const clusterer = new MarkerClusterer({
@@ -116,17 +116,17 @@ export const Map = ({ setSelectedMarkers }) => {
             map.getBounds().contains(marker.getPosition())
         ),
         onClusterClick: (_, cluster, __) => {
-          setSelectedMarkers(() => null);
-          setSelectedMarkers(() => cluster.markers);
+          setSelectedMarkers(() => null)
+          setSelectedMarkers(() => cluster.markers)
         },
-      });
+      })
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
       // eslint-disable-next-line no-undef
       const listenerId = google.maps.event.addListener(
         map,
         "tilesloaded",
         () => {
-          clusterer.clearMarkers();
+          clusterer.clearMarkers()
           clusterer.addMarkers(
             // Clear prev markers and only add markers that are visible & inside the map bounds
             markers.filter(
@@ -134,30 +134,30 @@ export const Map = ({ setSelectedMarkers }) => {
                 marker.getVisible() &&
                 map.getBounds().contains(marker.getPosition())
             )
-          );
+          )
           // console.log(clusterer.markers);
         }
-      );
-      setOpen(false);
+      )
+      setOpen(false)
       return () => {
         // eslint-disable-next-line no-undef
-        google.maps.event.removeListener(listenerId);
-      };
+        google.maps.event.removeListener(listenerId)
+      }
     }
-  }, [crimeData, map, directions, setSelectedMarkers]);
+  }, [crimeData, map, directions, setSelectedMarkers])
   useEffect(() => {
     // After directions have been set, face the target
     if (directions) {
-      const origin = directions.request.origin.location.toJSON();
-      const destination = directions.request.destination.location.toJSON();
+      const origin = directions.request.origin.location.toJSON()
+      const destination = directions.request.destination.location.toJSON()
       // eslint-disable-next-line no-undef
       const heading = google.maps.geometry.spherical.computeHeading(
         origin,
         destination
-      );
-      setMapHeading(heading);
+      )
+      setMapHeading(heading)
     }
-  }, [directions, map]);
+  }, [directions, map])
 
   const options = useMemo(
     () => ({
@@ -168,63 +168,64 @@ export const Map = ({ setSelectedMarkers }) => {
       clickableIcons: false,
     }),
     []
-  );
+  )
   return (
     <>
       <GoToPremiumAlert open={premiumAlertOpen} setOpen={setPremiumAlertOpen} />
-      <Box
-        position={"absolute"}
-        right={8}
-        bottom={56 + 8}
-        display={"flex"}
-        flexDirection="column"
-        alignItems={"end"}
-      >
-        {directions && (
-          <Fab
-            onClick={() => {
-              if (map) {
-                map.setHeading(mapHeading);
-                map.setTilt(map.getTilt() + 20)
-              }
-            }}
-            sx={{ mt: 1 }}
-            size="small"
-            color="info"
-            aria-label="calculate-path"
-          >
-            <NavigationIcon />
-          </Fab>
-        )}
-        <Fab
-          onClick={async () => {
-            const currentPosition = await getCurrentPosition();
-            setCurrentPos(currentPosition);
-            if (map) {
-              map.panTo(currentPos);
-            }
-          }}
-          sx={{ mt: 1 }}
-          size="small"
-          color="primary"
-        >
-          <MyLocationIcon />
-        </Fab>
-        {directions && <Fab
-          onClick={() => {
-            setPremiumAlertOpen(true);
-          }}
-          sx={{ mt: 1 }}
-          size="small"
-          color="success"
-          aria-label="calculate-path"
-        >
-          <RouteIcon />
-        </Fab>}
-      </Box>
-      <Box position="absolute" left={0} top={0} h={window.innerHeight} w="100%">
+
+      <Box position="absolute" left={0} top={0} h={window.innerHeight - 56} w="100%">
         {useMemo(
-          () => (
+          () => (<>
+            <Box
+              position={"absolute"}
+              right={8}
+              bottom={56 + 8}
+              display={"flex"}
+              flexDirection="column"
+              alignItems={"end"}
+            >
+              {directions && (
+                <Fab
+                  onClick={() => {
+                    if (map) {
+                      map.setHeading(mapHeading)
+                      map.setTilt(map.getTilt() + 20)
+                    }
+                  }}
+                  sx={{ mt: 1 }}
+                  size="small"
+                  color="info"
+                  aria-label="calculate-path"
+                >
+                  <NavigationIcon />
+                </Fab>
+              )}
+              <Fab
+                onClick={async () => {
+                  const currentPosition = await getCurrentPosition()
+                  setCurrentPos(currentPosition)
+                  if (map) {
+                    map.panTo(currentPos)
+                  }
+                }}
+                sx={{ mt: 1 }}
+                size="small"
+                color="primary"
+              >
+                <MyLocationIcon />
+              </Fab>
+              {directions && <Fab
+                onClick={() => {
+                  setPremiumAlertOpen(true)
+                }}
+                sx={{ mt: 1 }}
+                size="small"
+                color="success"
+                aria-label="calculate-path"
+              >
+                <RouteIcon />
+              </Fab>}
+            </Box>
             <GoogleMap
               options={options}
               mapContainerStyle={{
@@ -233,7 +234,8 @@ export const Map = ({ setSelectedMarkers }) => {
                 // height: '500px'
               }}
               onLoad={(map) => {
-                setMap(map);
+                console.log("map launches")
+                setMap(map)
               }}
               // id="marker-example"
               zoom={15}
@@ -253,6 +255,7 @@ export const Map = ({ setSelectedMarkers }) => {
                 />
               )}
             </GoogleMap>
+          </>
           ),
           [currentPos, directions, options]
         )}
@@ -266,5 +269,5 @@ export const Map = ({ setSelectedMarkers }) => {
       </Paper>
       <LoadingModal open={open} />
     </>
-  );
-};
+  )
+}
