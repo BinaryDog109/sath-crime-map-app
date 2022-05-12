@@ -1,14 +1,19 @@
 import { Box } from "@chakra-ui/react";
+import NavigationIcon from "@mui/icons-material/Navigation";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import RouteIcon from "@mui/icons-material/Route";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import { Button, Paper } from "@mui/material";
+import { Button, Fab, Paper } from "@mui/material";
 import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LoadingModal } from "./LoadingModal";
 import { SearchPlaces } from "./SearchPlaces";
+import { GoToPremiumAlert } from "./GoToPremiumAlert";
 
 export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
   const [open, setOpen] = useState(false); // The loading modal
+  const [premiumAlertOpen, setPremiumAlertOpen] = useState(false); // The premium alert modal
   const [currentPos, setCurrentPos] = useState(null);
   const [crimeData, setCrimeData] = useState(null);
   const [directions, setDirections] = useState();
@@ -91,11 +96,14 @@ export const Map = ({ setSelectedMarkers }) => {
         });
         // Use an array so that it will have a common interface
         // Notice this is a native event listener, so setting state will be in synchronous order (no batching)
-        marker.addListener("click", (e) => {setSelectedMarkers(()=>null); setSelectedMarkers(()=>[marker])});
+        marker.addListener("click", (e) => {
+          setSelectedMarkers(() => null);
+          setSelectedMarkers(() => [marker]);
+        });
         // Adding additional properties
         marker.crimeDetail = crime.detail;
-        marker.crimeId = crime.id
-        marker.crimeLocation = crime.location
+        marker.crimeId = crime.id;
+        marker.crimeLocation = crime.location;
         return marker;
       });
 
@@ -107,7 +115,10 @@ export const Map = ({ setSelectedMarkers }) => {
             marker.getVisible() &&
             map.getBounds().contains(marker.getPosition())
         ),
-        onClusterClick: (_, cluster, __) => {setSelectedMarkers(()=>null); setSelectedMarkers(()=>cluster.markers)},
+        onClusterClick: (_, cluster, __) => {
+          setSelectedMarkers(() => null);
+          setSelectedMarkers(() => cluster.markers);
+        },
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
       // eslint-disable-next-line no-undef
@@ -160,6 +171,57 @@ export const Map = ({ setSelectedMarkers }) => {
   );
   return (
     <>
+      <GoToPremiumAlert open={premiumAlertOpen} setOpen={setPremiumAlertOpen} />
+      <Box
+        position={"absolute"}
+        right={8}
+        bottom={56 + 8}
+        display={"flex"}
+        flexDirection="column"
+        alignItems={"end"}
+      >
+        {directions && (
+          <Fab
+            onClick={() => {
+              if (map) {
+                map.setHeading(mapHeading);
+                map.setTilt(map.getTilt() + 20)
+              }
+            }}
+            sx={{ mt: 1 }}
+            size="small"
+            color="info"
+            aria-label="calculate-path"
+          >
+            <NavigationIcon />
+          </Fab>
+        )}
+        <Fab
+          onClick={async () => {
+            const currentPosition = await getCurrentPosition();
+            setCurrentPos(currentPosition);
+            if (map) {
+              map.panTo(currentPos);
+            }
+          }}
+          sx={{ mt: 1 }}
+          size="small"
+          color="primary"
+        >
+          <MyLocationIcon />
+        </Fab>
+        {directions && <Fab
+          onClick={() => {
+            setPremiumAlertOpen(true);
+          }}
+          sx={{ mt: 1 }}
+          size="small"
+          color="success"
+          aria-label="calculate-path"
+        >
+          <RouteIcon />
+        </Fab>}
+      </Box>
       <Box position="absolute" left={0} top={0} h={window.innerHeight} w="100%">
         {useMemo(
           () => (
