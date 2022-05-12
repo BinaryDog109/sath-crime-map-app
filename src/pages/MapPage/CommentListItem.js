@@ -1,16 +1,30 @@
 // import { Box, Center, Divider, Icon, Image, Text } from "@chakra-ui/react"
 
-import { Text } from "@chakra-ui/react"
-import { Divider, Typography } from "@mui/material"
-import { Box } from "@mui/system"
-
-
-export const CommentListItem = ({data}) => {
+import { Text } from "@chakra-ui/react";
+import { Divider, Typography } from "@mui/material";
+import { Box } from "@mui/system";
+import SentimentVeryDissatisfiedIcon from "@mui/icons-material/SentimentVeryDissatisfied";
+import SentimentVerySatisfied from "@mui/icons-material/SentimentVerySatisfied";
+import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
+const ratingMap = {
+  "dangerous": {
+    icon: <SentimentVeryDissatisfiedIcon color="warning" />,
+    label: "dangerous",
+  },
+  "alright": {
+    icon: <SentimentNeutralIcon color="primary" />,
+    label: "alright",
+  },
+  "safe": {
+    icon: <SentimentVerySatisfied color="success" />,
+    label: "safe",
+  },
+};
+export const CommentListItem = ({ data }) => {
   return (
     <>
       <Box my={1} display={{ md: "flex" }}>
-        
-        <Box textAlign={"left"} >
+        <Box textAlign={"left"}>
           <Text
             mb={2}
             fontWeight="bold"
@@ -18,12 +32,11 @@ export const CommentListItem = ({data}) => {
             letterSpacing="wide"
             noOfLines={1}
           >
-            Title
+            {data.title}
           </Text>
-          
-          <Text noOfLines={3} color="gray.500">
-            { "Description"}
-          </Text>
+
+          <Text color="gray.500">{data.comment}</Text>
+          {<span>{ratingMap[data.rating].icon}</span>}
           <Text
             m={0}
             color="gray"
@@ -31,12 +44,10 @@ export const CommentListItem = ({data}) => {
             lineHeight="normal"
             fontWeight="semibold"
           >
-            { "By Unknown name"}
+            By {data.uid}
           </Text>
         </Box>
-        
       </Box>
-      
     </>
-  )
-}
+  );
+};

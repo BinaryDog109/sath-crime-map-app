@@ -4,8 +4,8 @@ export const CrimeDetailChips = ({ selectedMarkers }) => {
   return (
     selectedMarkers &&
     selectedMarkers.map((marker, index) => (
-      <Tooltip placement="top" title={marker.crimeLocation}>
-        <Chip key={index} sx={{ mr: 1, mt: 1 }} label={marker.crimeDetail} />
+      <Tooltip key={index} placement="top" title={marker.crimeLocation}>
+        <Chip sx={{ mr: 1, mt: 1 }} label={marker.crimeDetail} />
       </Tooltip>
     ))
   );

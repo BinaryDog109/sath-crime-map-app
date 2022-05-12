@@ -10,10 +10,11 @@ import { SearchPlaces } from "./SearchPlaces";
 export const MapPage = () => {
   // Select a marker
   const [selectedMarkers, setSelectedMarkers] = useState(null)
+  // console.log({selectedMarkers})
   return (
     <Box display={"flex"} flexDirection="column" alignItems={"center"}>
       <Map setSelectedMarkers={setSelectedMarkers} />
-      <CommentDrawer overflow={selectedMarkers? "visible" : "hidden"} selectedMarkers={selectedMarkers} />
+      {selectedMarkers && <CommentDrawer overflow={selectedMarkers? "visible" : "hidden"} selectedMarkers={selectedMarkers} />}
     </Box>
   );
 };

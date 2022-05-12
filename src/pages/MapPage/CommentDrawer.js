@@ -4,7 +4,7 @@ import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, List, ListItem } from "@chakra-ui/react";
 import { CommentListItem } from "./CommentListItem";
 import { Chip, Divider, Skeleton, Tab, Tabs } from "@mui/material";
@@ -35,7 +35,12 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
-
+  useEffect(() => { 
+    setOpen(true)
+    return () => {
+      console.log("drawer unmounts")
+    }
+  }, [])
   return (
     <>
       <Global

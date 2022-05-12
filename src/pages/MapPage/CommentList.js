@@ -1,19 +1,67 @@
-import { Button, Divider, List, ListItem } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  List,
+  ListItem,
+  MenuItem,
+  Select,
+} from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import { CommentFormModal } from "./CommentFormModal";
 import { CommentListItem } from "./CommentListItem";
+import { useGetDocuments } from "../../hooks/useGetDocuments";
+import { projectFirestore } from "../../firebase/config";
+import { Comments } from "./Comments";
 
 export const CommentList = ({ selectedMarkers }) => {
   const [open, setOpen] = useState(false);
-  console.log({ selectedMarkers });
+  const [selectedCrime, setSelectedCrime] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  // console.log({ selectedMarkers });
   return (
     <>
       <CommentFormModal
         open={open}
         setOpen={setOpen}
         selectedMarkers={selectedMarkers}
+        selectedCrime={selectedCrime}
+        selectedLocation={selectedLocation}
       />
+      <Box>
+        <FormControl variant="filled" fullWidth>
+          <InputLabel id="select-a-crime">Select a crime</InputLabel>
+          <Select
+            fullWidth
+            autoFocus
+            labelId="select-a-crime"
+            id="demo-simple-select"
+            value={selectedCrime}
+            label="Crime"
+            onChange={(e) => {
+              setSelectedCrime(e.target.value);
+            }}
+          >
+            {selectedMarkers.map((marker) => (
+              <MenuItem
+                style={{ whiteSpace: "normal" }}
+                key={marker.crimeId}
+                value={marker.crimeId}
+                data-location={marker.crimeLocation}
+                onClick={(e) => {
+                  setSelectedLocation(e.target.dataset.location);
+                }}
+              >
+                {marker.crimeLocation}: {marker.crimeDetail}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Box>
       <Button
+        disabled={!selectedCrime}
         onClick={() => {
           setOpen(true);
         }}
@@ -22,16 +70,10 @@ export const CommentList = ({ selectedMarkers }) => {
       >
         Add a comment
       </Button>
-      <List sx={{ p: 0 }}>
-        <ListItem className="comment">
-          <CommentListItem />
-        </ListItem>
-        <Divider></Divider>
-        <ListItem className="comment">
-          <CommentListItem />
-        </ListItem>
-        <Divider></Divider>
-      </List>
+      {useMemo(
+        () => selectedCrime && <Comments selectedCrime={selectedCrime} />,
+        [selectedCrime]
+      )}
     </>
   );
 };

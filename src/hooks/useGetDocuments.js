@@ -9,11 +9,12 @@ import { projectFirestore } from "../firebase/config";
 
 // useGetDocuments("Restaurants", "<userId>", "Food")
 // 
-export const useGetDocuments = (collection, id, subCollection, _query, _orderBy) => {
+export const useGetDocuments = (collection, id, subCollection, _query, _orderBy, cachedQuery = true) => {
   const [error, setError] = useState(null);
   const [docs, setDocs] = useState(null);
   const [isPending, setPending] = useState(false);
-  const query = useRef(_query).current 
+  let query = useRef(_query).current 
+  if (!cachedQuery) query = _query
   const orderBy = useRef(_orderBy).current 
   useEffect(() => {
     let ref = projectFirestore.collection(collection);
@@ -42,6 +43,6 @@ export const useGetDocuments = (collection, id, subCollection, _query, _orderBy)
 
     return () => {unsub()};
   }, [collection, id, subCollection, query, orderBy]);
-
+// console.log(error)
   return { docs, error, isPending };
 };

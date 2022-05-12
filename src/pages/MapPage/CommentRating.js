@@ -7,15 +7,15 @@ import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 const customIcons = {
   1: {
     icon: <SentimentVeryDissatisfiedIcon />,
-    label: "It is dangerous!",
+    label: "dangerous",
   },
   2: {
     icon: <SentimentNeutralIcon />,
-    label: "It is alright",
+    label: "alright",
   },
   3: {
     icon: <SentimentVerySatisfied />,
-    label: "It is safe",
+    label: "safe",
   },
 };
 
@@ -28,7 +28,7 @@ function IconContainer(props) {
 export function CommentRatings({ratingLabel, setRatingLabel}) {
   const handleChange = (e, index) => {
     if (!index) {
-      setRatingLabel("How do you feel about it?");
+      setRatingLabel("unknown");
       return;
     }
     const label = customIcons[index].label;
@@ -46,7 +46,7 @@ export function CommentRatings({ratingLabel, setRatingLabel}) {
         IconContainerComponent={IconContainer}
         highlightSelectedOnly
       />
-      <Typography>{ratingLabel}</Typography>
+      <Typography>It is {ratingLabel}!</Typography>
     </>
   );
 }

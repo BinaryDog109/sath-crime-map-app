@@ -90,7 +90,7 @@ export const Map = ({ setSelectedMarkers }) => {
           label,
         });
         // Use an array so that it will have a common interface
-        marker.addListener("click", (e) => setSelectedMarkers([marker]));
+        marker.addListener("click", (e) => {setSelectedMarkers(null); setSelectedMarkers([marker])});
         // Adding additional properties
         marker.crimeDetail = crime.detail;
         marker.crimeId = crime.id
@@ -106,7 +106,7 @@ export const Map = ({ setSelectedMarkers }) => {
             marker.getVisible() &&
             map.getBounds().contains(marker.getPosition())
         ),
-        onClusterClick: (_, cluster, __) => setSelectedMarkers(cluster.markers),
+        onClusterClick: (_, cluster, __) => {setSelectedMarkers(null); setSelectedMarkers(cluster.markers)},
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
       // eslint-disable-next-line no-undef
