@@ -29,8 +29,8 @@
     "@hookform/resolvers": "^2.8.8",
     "react-hook-form": "^7.30.0",
     "react-router-dom": "^6.3.0",
-    "styled-components": "^5.3.5"
-    "use-places-autocomplete": "^1.11.0",
+    "styled-components": "^5.3.5",
+    "use-places-autocomplete": "^1.11.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,15 +1,15 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-27 20:42:41
- * @LastEditTime: 2022-05-02 17:22:05
- * @FilePath: \coursework_git\src\util\firebaseAuth.js
+ * @LastEditTime: 2022-05-12 20:28:30
+ * @FilePath: \6214\src\util\firebaseAuth.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: 
  */
-import {useEffect, useState} from "react"
+import { useEffect, useState } from "react"
 
 // Import the functions you need from the SDKs you need
-import {initializeApp} from "firebase/app"
+import { initializeApp } from "firebase/app"
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -30,13 +30,13 @@ import {
 //     appId: "1:200889206145:web:aa623537369aa70e311480"
 // }
 const firebaseConfig = {
-    apiKey: "AIzaSyDkbAfw990f1bxolouCDtvAME2uf-i9UcA",
-    authDomain: "hungry-monkey-new-test.firebaseapp.com",
-    projectId: "hungry-monkey-new-test",
-    storageBucket: "hungry-monkey-new-test.appspot.com",
-    messagingSenderId: "871706005060",
-    appId: "1:871706005060:web:95d6930c224626cb813611"
-};
+    apiKey: "AIzaSyDRvN88FP7OLg7ZanrLJINNJ9uTXVXBI70",
+    authDomain: "opendata-cw2-44a16.firebaseapp.com",
+    projectId: "opendata-cw2-44a16",
+    storageBucket: "opendata-cw2-44a16.appspot.com",
+    messagingSenderId: "663389218820",
+    appId: "1:663389218820:web:bcf6011e4c0f9abc4e2d51"
+  };
 
 // Initialize Firebase
 const provider = new GoogleAuthProvider()
@@ -55,7 +55,7 @@ export function logout() {
     return signOut(auth)
 }
 
-export function signWithGoogle(){
+export function signWithGoogle() {
     return signInWithPopup(auth, provider)
 }
 
@@ -71,6 +71,6 @@ export function useAuth() {
     return currentUser
 }
 
-export function splitName(str){
+export function splitName(str) {
     return str.trim().split(/\s+/)
 }

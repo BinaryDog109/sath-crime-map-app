@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 18:07:07
- * @LastEditTime: 2022-05-12 18:54:41
+ * @LastEditTime: 2022-05-12 20:13:03
  * @FilePath: \6214\src\pages\login.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: 
@@ -77,67 +77,21 @@ export default function SignIn() {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     localStorage.clear()
-    axios.post("https://hungry-monkey-api.azurewebsites.net/api/user/checkUserStatus", {
-      email: data.get('email')
-    }).then((res)=>{
-      console.log("Check User Status Is: "+ res.data.result)
-      if (res.data.result.toString() === 'true'){
-        login(data.get('email'), data.get('password')).then((response) => {
-          console.log('response:', response)
-          if (response) {
-            console.log('currentUser.uid', response.user.uid)
-            sessionStorage.setItem('uid', response.user.uid)
-            // navigate('/user_page')
-          } else {
-            console.log("Login Failed")
-          }
-        }).catch((err) => {
-          console.log('err:', err)
-          alert('username or password is wrong')
-        })
-      }else{
-        setEmptyItem(true)
-        console.log("Email not verified")
+    login(data.get('email'), data.get('password')).then((response) => {
+      console.log('response:', response)
+      if (response) {
+        console.log('currentUser.uid', response.user.uid)
+        sessionStorage.setItem('uid', response.user.uid)
+        navigate('/ethnicitySelect')
+      } else {
+        console.log("Login Failed")
       }
-    }).catch(()=>{
-      alert("Email doesn't exist")
-      console.log("User doesn't exist")
+    }).catch((err) => {
+      console.log('err:', err)
+      alert('username or password is wrong')
     })
   }
 
-
-
-  const handleGoogleLogin = () => {
-    console.log('Google Here')
-    signWithGoogle().then((it)=>{
-      const userFromGoogle = it.user
-      axios.post("https://hungry-monkey-api.azurewebsites.net/api/user/getUserByUID",{
-        uid: userFromGoogle.uid
-      }).then((it)=>{
-          console.log("Google Sign In 200")
-        sessionStorage.setItem('uid',userFromGoogle.uid)
-        // navigate('/user_page')
-      }).catch(()=>{
-        console.log("Google Sign In 400!!!")
-        const nameList = splitName(userFromGoogle.displayName)
-        console.log(`Name is ${nameList}`)
-        axios.post("https://hungry-monkey-api.azurewebsites.net/api/user/createUser", {
-          uid: userFromGoogle.uid,
-          email: userFromGoogle.email,
-          first_name: nameList[0],
-          last_name: nameList[1],
-          role: "normal",
-          status: "confirmed"
-        }).then((it)=>{
-          console.log("Google Sign In complete")
-          sessionStorage.setItem('uid',userFromGoogle.uid)
-          // navigate('/user_page')
-        })
-      })
-    })
-  }
-
-  // if (!auth.currentUser) {
   return (
     <ThemeProvider theme={theme}>
       <Navbar/>
@@ -195,25 +149,8 @@ export default function SignIn() {
             <Button>
 
             </Button>
-            <Divider sx={{ flexGrow: 1 }} orientation="horizontal" />
-
-            <Button
-
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 0,
-                mb: 3,
-                // color: 'grey.700',
-                // backgroundColor: theme.palette.grey[50],
-                // borderColor: theme.palette.grey[100]
-              }}
-              startIcon={<GoogleIcon />}
-              color='warning'
-              onClick={handleGoogleLogin}
-            >
-              Sign In with Google
-            </Button>
+            
+           
             <Grid container>
               <Grid item xs>
                 <Link href="/forgot-password" variant="body2">

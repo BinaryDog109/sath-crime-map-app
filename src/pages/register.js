@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 19:01:30
- * @LastEditTime: 2022-05-12 18:41:37
+ * @LastEditTime: 2022-05-12 20:31:36
  * @FilePath: \6214\src\pages\register.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: The meterial version of the login-in page
@@ -56,12 +56,9 @@ export default function SignUp() {
       // navigate('/user_page')
     }
   })
-  const [emptyItem, setEmptyItem] = React.useState(false)
   const [role, setRole] = React.useState('normal')
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('Username is required'),
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
     // .min(6, 'Username must be at least 6 characters')
     // .max(20, 'Username must not exceed 20 characters'),
     email: Yup.string().required('Email is required').email('Email is invalid'),
@@ -89,15 +86,9 @@ export default function SignUp() {
   const onSubmit = (event) => {
 
     console.log({
-      firstName: event.firstName,
-      lastName: event.lastName,
+      username: event.username,
+      password1:event.password1,
       email: event.email,
-      password1: event.password1,
-      password2: event.password2,
-      address1: event.address1,
-      address2: event.address2,
-      country: event.country,
-      role: role
     })
     signup(event.email, event.password1).then((response) => {
       const currentUser = auth.currentUser
@@ -113,20 +104,12 @@ export default function SignUp() {
           'uid': currentUser.uid,
           'email': event.email,
           'nick_name': event.username,
-
         }
         axios.post('https://open-data-cw2-api.azurewebsites.net/api/user/createNewUser', newAccount)
           .then(response => {
             console.log('response:', response.data)
             //sessionStorage.setItem('user', JSON.stringify(newAccount))
-            axios.post('https://hungry-monkey-api.azurewebsites.net/api/user/verifyEmail', {
-              uid: currentUser.uid,
-              email: event.email
-            }).then(() => {
-              setEmptyItem(true)
-              console.log("Verification Email Sent")
-              // navigate('/login')
-            })
+            navigate('/login')
           })
           .catch(error => {
             console.log(error)
@@ -150,9 +133,6 @@ export default function SignUp() {
     console.log(event.target.value)
   }
 
-  const handleClose = () => {
-    setEmptyItem(false)
-  }
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const theme = React.useMemo(
     () =>
@@ -315,16 +295,6 @@ export default function SignUp() {
               </Grid>
             </FormControl>
           </Box>
-          <Snackbar
-            open={emptyItem}
-            autoHideDuration={3000}
-            onClose={handleClose}
-            severity="info"
-          >
-            <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-              Verification Email Sent
-            </Alert>
-          </Snackbar>
           <Copyright sx={{ mt: 5 }} />
         </Container>
       </ThemeProvider>
