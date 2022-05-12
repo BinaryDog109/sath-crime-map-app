@@ -13,7 +13,6 @@ export const Comments = ({ selectedCrime }) => {
     error,
     isPending,
   } = useGetDocuments("Comments", null, null, query, ["createdAt", "desc"], false);
-  console.log(error)
   return (
     <List sx={{ p: 0 }}>{error}
       {comments && (
