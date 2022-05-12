@@ -1,6 +1,5 @@
 import { useLoadScript } from "@react-google-maps/api";
-import Map from "../components/Map";
-import {MapWithMarkerClusterer} from "../components/MapClusterTest";
+import { MapPage } from "./MapPage/MapPage";
 const libraries = ["places"]
 
 export default function Home() {
@@ -10,5 +9,5 @@ export default function Home() {
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return <MapWithMarkerClusterer />;
+  return <MapPage />;
 }
