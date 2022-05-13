@@ -16,6 +16,7 @@ const typeIconMap = {
   "violence": "http://localhost:3000/map-icons/violence.png",
   "theft": "http://localhost:3000/map-icons/theft.png",
   "public order": "http://localhost:3000/map-icons/public order.png",
+  "multiple": "http://localhost:3000/map-icons/multiple.png",
 }
 export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
