@@ -9,7 +9,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { LoadingModal } from "./LoadingModal";
 import { SearchPlaces } from "./SearchPlaces";
 import { GoToPremiumAlert } from "./GoToPremiumAlert";
+import { folderClusterRenderer } from "./folderClusterRenderer";
 
+import "./Map.css"
+const typeIconMap = {
+  "violence": "http://localhost:3000/map-icons/violence.png",
+  "theft": "http://localhost:3000/map-icons/theft.png",
+  "public order": "http://localhost:3000/map-icons/public order.png",
+}
 export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
   const [open, setOpen] = useState(false); // The loading modal
@@ -91,8 +98,8 @@ export const Map = ({ setSelectedMarkers }) => {
         const label = crime.type;
         // eslint-disable-next-line no-undef
         const marker = new google.maps.Marker({
-          position: { lng: +crime.longitude, lat: +crime.latitude },
-          label,
+          position: { lng: +crime.longitude, lat: +crime.latitude },          
+          icon: typeIconMap[crime.type] || null
         });
         // Use an array so that it will have a common interface
         // Notice this is a native event listener, so setting state will be in synchronous order (no batching)
@@ -104,6 +111,7 @@ export const Map = ({ setSelectedMarkers }) => {
         marker.crimeDetail = crime.detail;
         marker.crimeId = crime.id;
         marker.crimeLocation = crime.location;
+        marker.crimeType = crime.type
         return marker;
       });
 
@@ -115,9 +123,14 @@ export const Map = ({ setSelectedMarkers }) => {
             marker.getVisible() &&
             map.getBounds().contains(marker.getPosition())
         ),
+        renderer: folderClusterRenderer,
         onClusterClick: (_, cluster, __) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => cluster.markers);
+          cluster.markers.forEach(marker => {
+            const {lat, lng} = marker.position
+            console.log({lat: lat(), lng: lng(), type: marker.crimeType})
+          })
         },
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
