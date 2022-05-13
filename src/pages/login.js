@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 18:07:07
- * @LastEditTime: 2022-05-12 23:10:10
+ * @LastEditTime: 2022-05-13 13:21:53
  * @FilePath: \6214\src\pages\login.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: 
@@ -85,8 +85,9 @@ export default function SignIn() {
         axios.post('https://open-data-cw2-api.azurewebsites.net/api/user/getUserByUID',{
           uid:response.user.uid
       }).then((response) =>{
-        sessionStorage.setItem('email',response.email)
-        sessionStorage.setItem('username',response.nick_name)
+        
+        sessionStorage.setItem('email',response.data.email)
+        sessionStorage.setItem('username',response.data.nick_name)
       })
         navigate('/ethnicitySelect')
       } else {
