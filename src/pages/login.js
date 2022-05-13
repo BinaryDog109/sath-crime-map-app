@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 18:07:07
- * @LastEditTime: 2022-05-13 13:21:53
+ * @LastEditTime: 2022-05-13 19:42:09
  * @FilePath: \6214\src\pages\login.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: 
@@ -32,7 +32,7 @@ import {
   Snackbar,
 } from '@mui/material'
 import axios from 'axios'
-import {signWithGoogle, splitName} from "../util/firebaseAuth"
+import { signWithGoogle, splitName } from "../util/firebaseAuth"
 
 function Copyright(props) {
   return (
@@ -54,9 +54,9 @@ export default function SignIn() {
       // navigate('/user_page')
     }
   })
-  const[emptyItem, setEmptyItem] = React.useState(false)
+  const [emptyItem, setEmptyItem] = React.useState(false)
 
-  const handleClose = () =>{
+  const handleClose = () => {
     setEmptyItem(false)
   }
 
@@ -82,14 +82,22 @@ export default function SignIn() {
       if (response) {
         console.log('currentUser.uid', response.user.uid)
         sessionStorage.setItem('uid', response.user.uid)
-        axios.post('https://open-data-cw2-api.azurewebsites.net/api/user/getUserByUID',{
-          uid:response.user.uid
-      }).then((response) =>{
+        axios.post('https://open-data-cw2-api.azurewebsites.net/api/user/getUserByUID', {
+          uid: response.user.uid
+        }).then((response) => {
+
+          sessionStorage.setItem('email', response.data.email)
+          sessionStorage.setItem('username', response.data.nick_name)
+          if(response.data.ethnicity){
+            sessionStorage.setItem('ethnicity', response.data.ethnicity)
+            navigate('/MapPage')
+          }
+          else{
+            navigate('/ethnicitySelect')
+          }
+        })
+
         
-        sessionStorage.setItem('email',response.data.email)
-        sessionStorage.setItem('username',response.data.nick_name)
-      })
-        navigate('/ethnicitySelect')
       } else {
         console.log("Login Failed")
       }
@@ -101,7 +109,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar/>
+      <Navbar />
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
@@ -141,7 +149,7 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
             />
-            
+
             <Button
               type="submit"
               fullWidth
@@ -156,8 +164,8 @@ export default function SignIn() {
             <Button>
 
             </Button>
-            
-           
+
+
             <Grid container>
               <Grid item xs>
                 <Link href="/forgot-password" variant="body2">
@@ -173,10 +181,10 @@ export default function SignIn() {
           </Box>
         </Box>
         <Snackbar
-            open={emptyItem}
-            autoHideDuration={3000}
-            onClose={handleClose}
-            severity="info"
+          open={emptyItem}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          severity="info"
         >
           <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
             Please verify your email first

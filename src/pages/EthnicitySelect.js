@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Box, Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material'
 import EthnicityOption from "../components/EthnicityOption"
 import { useNavigate } from 'react-router-dom'
+import axios from "axios"
 
 function EthnicitySelect() {
     const [selectedEthnicity, setSelectedEthinicity] = useState('')
@@ -12,8 +13,13 @@ function EthnicitySelect() {
             if (event.target[i].checked) {
                 sessionStorage.setItem('ethnicity', event.target[i].value)
                 // setSelectedEthinicity(element.value)
+                axios.patch('https://open-data-cw2-api.azurewebsites.net/api/user/updateUserEthnicity', {
+                    uid: sessionStorage.getItem('uid'),
+                    ethnicity: event.target[i].value,
+                })
             }
         }
+
         // event.target.forEach(element => {
         //     if(element.checked){
         //         sessionStorage.setItem('ethnicity',element.value)
@@ -36,16 +42,16 @@ function EthnicitySelect() {
             </Grid>
 
             {/** Middle section - ethnicity selection */}
-            <FormControl sx={{width: "100%"}}>
+            <FormControl sx={{ width: "100%" }}>
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={12}>
                         <RadioGroup name="ethnicity-select-radio-group" defaultValue="optOut">
-                            <FormControlLabel value="white" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="White" emoji="🧑🏻👩🏻"/>} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="black" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Black" emoji="🧑🏿👩🏿"/>} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="asian" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Asian" emoji="🧑👩"/>} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="mixed" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Mixed" emoji="👨🏽👩🏽"/>} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="unknown" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Prefer not to say" />} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="other" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Other"  />} style={{justifyContent: "center"}} />
+                            <FormControlLabel value="White" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="White" emoji="🧑🏻👩🏻" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="Black" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Black" emoji="🧑🏿👩🏿" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="Asia" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Asian" emoji="🧑👩" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="Mixed" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Mixed" emoji="👨🏽👩🏽" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="unknown" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Prefer not to say" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="Other" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Other" />} style={{ justifyContent: "center" }} />
                         </RadioGroup>
                     </Grid>
                 </Grid>
@@ -54,7 +60,7 @@ function EthnicitySelect() {
             {/** bottom row - submit button takes the user to the next page */}
             <Grid container direction="row" justifyContent="center" alignItems="center" style={{ marginBottom: 10 }}>
                 <Grid item xs={12} justifyContent="center">
-                    <Button sx={{marginLeft: "50%", transform: "translate(-50%)"}} variant="contained" type="submit">Continue</Button>
+                    <Button sx={{ marginLeft: "50%", transform: "translate(-50%)" }} variant="contained" type="submit">Continue</Button>
                 </Grid>
             </Grid>
 
