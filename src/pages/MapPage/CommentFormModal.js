@@ -17,15 +17,20 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useCRUD } from "../../hooks/useCRUD";
+import { useUserContext } from "../../hooks/useUserContext";
 import { CommentRatings } from "./CommentRating";
 
+
 export const CommentFormModal = ({
+  user,
   open,
   setOpen,
   selectedMarkers,
   selectedCrime,
   selectedLocation,
 }) => {
+  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -77,6 +82,8 @@ export const CommentFormModal = ({
     setInputErros([...errors]);
     return errors.length === 0;
   };
+  
+  
   const handleSubmit = (e) => {
     setInputErros([]);
     e.preventDefault();
@@ -86,7 +93,8 @@ export const CommentFormModal = ({
       addDoc({
         ...form,
         crimeId: selectedCrime,
-        uid: 123,
+        uid: user.uid,
+        username: user.username
       });
       reset();
       setOpen(false)

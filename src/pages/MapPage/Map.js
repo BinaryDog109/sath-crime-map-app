@@ -107,7 +107,7 @@ export const Map = ({ setSelectedMarkers }) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => [marker]);
           const { lat, lng } = marker.position;
-          console.log({ lat: lat(), lng: lng(), type: marker.crimeType });
+          console.log({ lat: lat(), lng: lng(), type: marker.crimeType, id: marker.crimeId });
         });
         // Adding additional properties
         marker.crimeDetail = crime.detail;
