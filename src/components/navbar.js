@@ -8,6 +8,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg'
 import { useNavigate } from 'react-router-dom'
 import LogoutIcon from '@mui/icons-material/Logout'
 import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound'
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline'
 import {
     AppBar,
     Box,
@@ -62,15 +63,12 @@ export default function Navbar() {
             <List>
                 <ListItem disablePadding>
                     <ListItemButton>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            // onClick={handleMenu}
-                            color="inherit"
-                        >
-                        </IconButton>
+                        <ListItemIcon>
+                            <PersonOutlineIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Hi 🖐 ~\n' + sessionStorage.getItem('username')} sx={{
+                            whiteSpace:"pre"
+                        }} />
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
