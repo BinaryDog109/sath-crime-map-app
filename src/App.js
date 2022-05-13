@@ -2,7 +2,8 @@ import { BrowserRouter, Link, Routes, Route } from 'react-router-dom'
 import Register from './pages/register'
 import Login from './pages/login'
 import EthnicitySelect from './pages/EthnicitySelect'
-import {MapPage} from './pages/MapPage/MapPage'
+import { MapPage } from './pages/MapPage/MapPage'
+import Price from './pages/price'
 function App() {
   return (
     <BrowserRouter>
@@ -13,11 +14,12 @@ function App() {
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
         <Route path="ethnicitySelect" element={<EthnicitySelect />} />
-          <Route path="MapPage" element={<MapPage />} />
+        <Route path="MapPage" element={<MapPage />} />
+        <Route path="price" element={<Price/>}/>
       </Routes>
 
     </BrowserRouter>
   )
 }
 
-export default App;
+export default App

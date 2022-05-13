@@ -6,7 +6,8 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import LoginIcon from '@mui/icons-material/Login'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import { useNavigate } from 'react-router-dom'
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from '@mui/icons-material/Logout'
+import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound'
 import {
     AppBar,
     Box,
@@ -18,10 +19,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
-    TextField,
     Typography,
-    useMediaQuery,
-    Alert, Snackbar
 } from '@mui/material'
 export default function Navbar() {
     const navigate = useNavigate()
@@ -34,20 +32,24 @@ export default function Navbar() {
         setState({ ...state, [anchor]: open })
     }
     const handleLogin = () => {
-        console.log('nav to login');
+        console.log('nav to login')
         navigate('/login')
     }
-    const handleLogout= () => {
+    const handleLogout = () => {
         sessionStorage.clear()
         navigate('/login')
     }
     const handleRegister = () => {
-        console.log('nav to register');
+        console.log('nav to register')
         navigate('/register')
     }
     const handleMap = () => {
-        console.log('nav to map');
+        console.log('nav to map')
         navigate('/MapPage')
+    }
+    const handlePrice = () => {
+        console.log('nav to price')
+        navigate('/price')
     }
 
     const list1 = (anchor) => (
@@ -60,10 +62,6 @@ export default function Navbar() {
             <List>
                 <ListItem disablePadding>
                     <ListItemButton>
-                        {/* <ListItemIcon>
-                            <LoginIcon />
-                        </ListItemIcon>
-                        <ListItemText primary='Login' onClick={handleLogin} /> */}
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -94,17 +92,17 @@ export default function Navbar() {
                         <ListItemText primary="Map" onClick={handleMap} />
                     </ListItemButton>
                 </ListItem>
-                {/* 
-                {['Map', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))} */}
+            </List>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <CurrencyPoundIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Price" onClick={handlePrice} />
+                    </ListItemButton>
+                </ListItem>
             </List>
         </Box>
     )
@@ -146,6 +144,17 @@ export default function Navbar() {
                     </ListItemButton>
                 </ListItem>
             </List>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <CurrencyPoundIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Price" onClick={handlePrice} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
         </Box>
     )
     return (
@@ -173,7 +182,7 @@ export default function Navbar() {
                 open={state['left']}
                 onClose={toggleDrawer('left', false)}
             >
-                {uid?  list1('left') : list2('left')}
+                {uid ? list1('left') : list2('left')}
             </Drawer>
 
         </Box>
