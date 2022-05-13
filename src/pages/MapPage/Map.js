@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/react";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import RouteIcon from "@mui/icons-material/Route";
+import InfoIcon from "@mui/icons-material/Info";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { Button, Fab, Paper, useMediaQuery } from "@mui/material";
 import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
@@ -11,17 +12,15 @@ import { SearchPlaces } from "./SearchPlaces";
 import { GoToPremiumAlert } from "./GoToPremiumAlert";
 import { folderClusterRenderer } from "./folderClusterRenderer";
 
-import "./Map.css"
-const typeIconMap = {
-  "violence": "http://localhost:3000/map-icons/violence.png",
-  "theft": "http://localhost:3000/map-icons/theft.png",
-  "public order": "http://localhost:3000/map-icons/public order.png",
-  "multiple": "http://localhost:3000/map-icons/multiple.png",
-}
+import "./Map.css";
+import { LegendInfoAlert } from "./LegendInfoAlert";
+import { typeIconMap } from "./typeIconMap";
+
 export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
   const [open, setOpen] = useState(false); // The loading modal
   const [premiumAlertOpen, setPremiumAlertOpen] = useState(false); // The premium alert modal
+  const [infoOpen, setInfoOpen] = useState(false);
   const [currentPos, setCurrentPos] = useState(null);
   const [crimeData, setCrimeData] = useState(null);
   const [directions, setDirections] = useState();
@@ -99,20 +98,22 @@ export const Map = ({ setSelectedMarkers }) => {
         const label = crime.type;
         // eslint-disable-next-line no-undef
         const marker = new google.maps.Marker({
-          position: { lng: +crime.longitude, lat: +crime.latitude },          
-          icon: typeIconMap[crime.type] || null
+          position: { lng: +crime.longitude, lat: +crime.latitude },
+          icon: (typeIconMap[crime.type] && typeIconMap[crime.type].image) || null,
         });
         // Use an array so that it will have a common interface
         // Notice this is a native event listener, so setting state will be in synchronous order (no batching)
         marker.addListener("click", (e) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => [marker]);
+          const { lat, lng } = marker.position;
+          console.log({ lat: lat(), lng: lng(), type: marker.crimeType, id: marker.crimeId });
         });
         // Adding additional properties
         marker.crimeDetail = crime.detail;
         marker.crimeId = crime.id;
         marker.crimeLocation = crime.location;
-        marker.crimeType = crime.type
+        marker.crimeType = crime.type;
         return marker;
       });
 
@@ -128,10 +129,10 @@ export const Map = ({ setSelectedMarkers }) => {
         onClusterClick: (_, cluster, __) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => cluster.markers);
-          cluster.markers.forEach(marker => {
-            const {lat, lng} = marker.position
-            console.log({lat: lat(), lng: lng(), type: marker.crimeType})
-          })
+          cluster.markers.forEach((marker) => {
+            const { lat, lng } = marker.position;
+            console.log({ lat: lat(), lng: lng(), type: marker.crimeType });
+          });
         },
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
@@ -172,7 +173,7 @@ export const Map = ({ setSelectedMarkers }) => {
       setMapHeading(heading);
     }
   }, [directions, map]);
-  const matches = useMediaQuery('(min-width:600px)');
+  const matches = useMediaQuery("(min-width:600px)");
   const options = useMemo(
     () => ({
       // mapId: "331fbe194ea4838c",
@@ -186,12 +187,12 @@ export const Map = ({ setSelectedMarkers }) => {
   return (
     <>
       <GoToPremiumAlert open={premiumAlertOpen} setOpen={setPremiumAlertOpen} />
-
+      <LegendInfoAlert open={infoOpen} setOpen={setInfoOpen} />
       <Box
         position="absolute"
         left={0}
         top={0}
-        h={window.innerHeight - (matches? 64: 56)}
+        h={window.innerHeight - (matches ? 64 : 56)}
         w="100%"
       >
         <Box
@@ -213,7 +214,7 @@ export const Map = ({ setSelectedMarkers }) => {
               sx={{ mt: 1 }}
               size="small"
               color="info"
-              aria-label="calculate-path"
+              aria-label="navigation"
             >
               <NavigationIcon />
             </Fab>
@@ -229,6 +230,7 @@ export const Map = ({ setSelectedMarkers }) => {
             sx={{ mt: 1 }}
             size="small"
             color="primary"
+            aria-label="locate-user"
           >
             <MyLocationIcon />
           </Fab>
@@ -243,6 +245,18 @@ export const Map = ({ setSelectedMarkers }) => {
               aria-label="calculate-path"
             >
               <RouteIcon />
+            </Fab>
+          )}
+          {directions && (
+            <Fab
+              onClick={() => {
+                setInfoOpen(true);
+              }}
+              sx={{ mt: 1 }}
+              size="small"
+              aria-label="display-info-legend"
+            >
+              <InfoIcon />
             </Fab>
           )}
         </Box>
@@ -264,7 +278,7 @@ export const Map = ({ setSelectedMarkers }) => {
                 zoom={15}
                 center={currentPos}
               >
-                <Marker position={currentPos} label="You" />
+                <Marker position={currentPos} icon={typeIconMap["user"].image} />
                 {directions && (
                   <DirectionsRenderer
                     directions={directions}

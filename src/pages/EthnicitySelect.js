@@ -53,7 +53,7 @@ function EthnicitySelect() {
 
             {/** bottom row - submit button takes the user to the next page */}
             <Grid container direction="row" justifyContent="center" alignItems="center" style={{ marginBottom: 10 }}>
-                <Grid item xs={6}>
+                <Grid item xs={12} justifyContent="center">
                     <Button sx={{marginLeft: "50%", transform: "translate(-50%)"}} variant="contained" type="submit">Continue</Button>
                 </Grid>
             </Grid>

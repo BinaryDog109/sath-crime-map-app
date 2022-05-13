@@ -44,7 +44,7 @@ export const CommentListItem = ({ data }) => {
             lineHeight="normal"
             fontWeight="semibold"
           >
-            By {data.uid}
+            By {data.username}
           </Text>
         </Box>
       </Box>
