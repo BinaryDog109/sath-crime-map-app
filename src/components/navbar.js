@@ -6,6 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import LoginIcon from '@mui/icons-material/Login'
 import HowToRegIcon from '@mui/icons-material/HowToReg'
 import { useNavigate } from 'react-router-dom'
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
     AppBar,
     Box,
@@ -77,8 +78,8 @@ export default function Navbar() {
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
-                            <HowToRegIcon />
-                        </ListItemIcon>e
+                            <LogoutIcon />
+                        </ListItemIcon>
                         <ListItemText primary='Logout' onClick={handleLogout} />
                     </ListItemButton>
                 </ListItem>
