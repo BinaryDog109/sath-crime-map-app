@@ -24,6 +24,7 @@ import {
 } from '@mui/material'
 export default function Navbar() {
     const navigate = useNavigate()
+    const [uid, setUid] = React.useState(sessionStorage.getItem('uid'))
     const [state, setState] = React.useState({
         bottom: false,
     })
@@ -31,14 +32,24 @@ export default function Navbar() {
     const toggleDrawer = (anchor, open) => (event) => {
         setState({ ...state, [anchor]: open })
     }
-    const handleLogin = () =>{
+    const handleLogin = () => {
+        console.log('nav to login');
         navigate('/login')
     }
-    const handleRegister = () =>{
+    const handleLogout= () => {
+        sessionStorage.clear()
+        navigate('/login')
+    }
+    const handleRegister = () => {
+        console.log('nav to register');
         navigate('/register')
     }
+    const handleMap = () => {
+        console.log('nav to map');
+        navigate('/MapPage')
+    }
 
-    const list = (anchor) => (
+    const list1 = (anchor) => (
         <Box
             sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 200, zIndex: 1 }}
             role="presentation"
@@ -48,18 +59,27 @@ export default function Navbar() {
             <List>
                 <ListItem disablePadding>
                     <ListItemButton>
-                        <ListItemIcon>
+                        {/* <ListItemIcon>
                             <LoginIcon />
                         </ListItemIcon>
-                        <ListItemText primary='Login' onClick={handleLogin}/>
+                        <ListItemText primary='Login' onClick={handleLogin} /> */}
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            // onClick={handleMenu}
+                            color="inherit"
+                        >
+                        </IconButton>
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
                             <HowToRegIcon />
-                        </ListItemIcon>
-                        <ListItemText primary='Register' onClick={handleRegister}/>
+                        </ListItemIcon>e
+                        <ListItemText primary='Logout' onClick={handleLogout} />
                     </ListItemButton>
                 </ListItem>
             </List>
@@ -70,7 +90,7 @@ export default function Navbar() {
                         <ListItemIcon>
                             <MapIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Map" />
+                        <ListItemText primary="Map" onClick={handleMap} />
                     </ListItemButton>
                 </ListItem>
                 {/* 
@@ -84,6 +104,46 @@ export default function Navbar() {
                         </ListItemButton>
                     </ListItem>
                 ))} */}
+            </List>
+        </Box>
+    )
+
+
+    const list2 = (anchor) => (
+        <Box
+            sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 200, zIndex: 1 }}
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+        >
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <LoginIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Login' onClick={handleLogin} />
+                    </ListItemButton>
+                </ListItem>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <HowToRegIcon />
+                        </ListItemIcon>
+                        <ListItemText primary='Register' onClick={handleRegister} />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem disablePadding>
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <MapIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Map" onClick={handleMap} />
+                    </ListItemButton>
+                </ListItem>
             </List>
         </Box>
     )
@@ -102,7 +162,7 @@ export default function Navbar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Path
+                        SATH
                     </Typography>
                     <Button color="inherit" >Login</Button>
                 </Toolbar>
@@ -112,7 +172,7 @@ export default function Navbar() {
                 open={state['left']}
                 onClose={toggleDrawer('left', false)}
             >
-                {list('left')}
+                {uid?  list1('left') : list2('left')}
             </Drawer>
 
         </Box>
