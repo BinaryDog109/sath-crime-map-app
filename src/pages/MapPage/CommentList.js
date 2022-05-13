@@ -61,8 +61,8 @@ export const CommentList = ({ selectedMarkers }) => {
                 }}
               >
                 {marker.crimeLocation}:{" "}
-                {marker.type === "multiple"
-                  ? marker.crimeDetail.map((detail) => `${detail} `)
+                {marker.crimeType === "multiple"
+                  ? marker.crimeDetail.map((detail) => `${detail}, `)
                   : marker.crimeDetail}
               </MenuItem>
             ))}
