@@ -1,3 +1,4 @@
+import { Spinner } from "@chakra-ui/react";
 import { Divider, List, ListItem, Typography } from "@mui/material";
 import { useEffect, useMemo, Fragment } from "react";
 import { useGetDocuments } from "../../hooks/useGetDocuments";
@@ -12,25 +13,36 @@ export const Comments = ({ selectedCrime }) => {
     docs: comments,
     error,
     isPending,
-  } = useGetDocuments("Comments", null, null, query, ["createdAt", "desc"], false);
+  } = useGetDocuments(
+    "Comments",
+    null,
+    null,
+    query,
+    ["createdAt", "desc"],
+    false
+  );
   return (
-    <List sx={{ p: 0 }}>{error}
-      {comments && (
-        <>
-            
-          <Typography fontWeight={600} mt={2}>
-            There are {comments.length} comments
-          </Typography>
-          {comments.map((comment) => (
-            <Fragment key={comment.id}>
-              <ListItem>
-                <CommentListItem data={comment} />
-              </ListItem>
-              <Divider></Divider>
-            </Fragment>
-          ))}
-        </>
-      )}
-    </List>
+    <>
+      {isPending && <Spinner />}
+      <List sx={{ p: 0 }}>
+        {error}
+
+        {comments && (
+          <>
+            <Typography fontWeight={600} mt={2}>
+              There are {comments.length} comments
+            </Typography>
+            {comments.map((comment) => (
+              <Fragment key={comment.id}>
+                <ListItem>
+                  <CommentListItem data={comment} />
+                </ListItem>
+                <Divider></Divider>
+              </Fragment>
+            ))}
+          </>
+        )}
+      </List>
+    </>
   );
 };
