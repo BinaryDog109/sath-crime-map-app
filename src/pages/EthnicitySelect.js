@@ -44,7 +44,7 @@ function EthnicitySelect() {
                             <FormControlLabel value="black" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Black" emoji="🧑🏿👩🏿"/>} style={{justifyContent: "center"}} />
                             <FormControlLabel value="asian" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Asian" emoji="🧑👩"/>} style={{justifyContent: "center"}} />
                             <FormControlLabel value="mixed" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Mixed" emoji="👨🏽👩🏽"/>} style={{justifyContent: "center"}} />
-                            <FormControlLabel value="optOut" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Prefer not to say" />} style={{justifyContent: "center"}} />
+                            <FormControlLabel value="unknown" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Prefer not to say" />} style={{justifyContent: "center"}} />
                             <FormControlLabel value="other" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Other"  />} style={{justifyContent: "center"}} />
                         </RadioGroup>
                     </Grid>
