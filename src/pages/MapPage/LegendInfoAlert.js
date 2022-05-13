@@ -1,11 +1,19 @@
 import {
+  Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
 } from "@mui/material";
+import { typeIconMap } from "./typeIconMap";
+
 export const LegendInfoAlert = ({ open, setOpen }) => {
   const handleClickOpen = () => {
     setOpen(true);
@@ -22,19 +30,26 @@ export const LegendInfoAlert = ({ open, setOpen }) => {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {"Go premium to enable safe path calculation?"}
+        {"Information about the icons"}
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Premium users can enjoy the safe path calculation, ads prevention, and
-          more!
-        </DialogContentText>
+        <List
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+        >
+          {Object.keys(typeIconMap).map((type, index) => (
+            <ListItem key={index}>
+              <ListItemAvatar>
+                <Avatar src={typeIconMap[type].image} />
+              </ListItemAvatar>
+              <ListItemText>
+                  <Typography>{typeIconMap[type].description}</Typography>
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Take me to Premium!</Button>
-        <Button onClick={handleClose} autoFocus>
-          Nah
-        </Button>
+        <Button onClick={handleClose}>Got it!</Button>
       </DialogActions>
     </Dialog>
   );

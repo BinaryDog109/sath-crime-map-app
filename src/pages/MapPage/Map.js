@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import RouteIcon from "@mui/icons-material/Route";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { Button, Fab, Paper, useMediaQuery } from "@mui/material";
 import { DirectionsRenderer, GoogleMap, Marker } from "@react-google-maps/api";
@@ -13,17 +13,14 @@ import { GoToPremiumAlert } from "./GoToPremiumAlert";
 import { folderClusterRenderer } from "./folderClusterRenderer";
 
 import "./Map.css";
-const typeIconMap = {
-  violence: "http://localhost:3000/map-icons/violence.png",
-  theft: "http://localhost:3000/map-icons/theft.png",
-  "public order": "http://localhost:3000/map-icons/public order.png",
-  multiple: "http://localhost:3000/map-icons/multiple.png",
-  user: "http://localhost:3000/map-icons/user.png",
-};
+import { LegendInfoAlert } from "./LegendInfoAlert";
+import { typeIconMap } from "./typeIconMap";
+
 export const Map = ({ setSelectedMarkers }) => {
   const [map, setMap] = useState(null);
   const [open, setOpen] = useState(false); // The loading modal
   const [premiumAlertOpen, setPremiumAlertOpen] = useState(false); // The premium alert modal
+  const [infoOpen, setInfoOpen] = useState(false);
   const [currentPos, setCurrentPos] = useState(null);
   const [crimeData, setCrimeData] = useState(null);
   const [directions, setDirections] = useState();
@@ -102,7 +99,7 @@ export const Map = ({ setSelectedMarkers }) => {
         // eslint-disable-next-line no-undef
         const marker = new google.maps.Marker({
           position: { lng: +crime.longitude, lat: +crime.latitude },
-          icon: typeIconMap[crime.type] || null,
+          icon: (typeIconMap[crime.type] && typeIconMap[crime.type].image) || null,
         });
         // Use an array so that it will have a common interface
         // Notice this is a native event listener, so setting state will be in synchronous order (no batching)
@@ -190,7 +187,7 @@ export const Map = ({ setSelectedMarkers }) => {
   return (
     <>
       <GoToPremiumAlert open={premiumAlertOpen} setOpen={setPremiumAlertOpen} />
-
+      <LegendInfoAlert open={infoOpen} setOpen={setInfoOpen} />
       <Box
         position="absolute"
         left={0}
@@ -253,7 +250,7 @@ export const Map = ({ setSelectedMarkers }) => {
           {directions && (
             <Fab
               onClick={() => {
-                setPremiumAlertOpen(true);
+                setInfoOpen(true);
               }}
               sx={{ mt: 1 }}
               size="small"
@@ -281,7 +278,7 @@ export const Map = ({ setSelectedMarkers }) => {
                 zoom={15}
                 center={currentPos}
               >
-                <Marker position={currentPos} icon={typeIconMap["user"]} />
+                <Marker position={currentPos} icon={typeIconMap["user"].image} />
                 {directions && (
                   <DirectionsRenderer
                     directions={directions}
