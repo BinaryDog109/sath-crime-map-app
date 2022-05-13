@@ -6,6 +6,7 @@ export const UserContextProvider = ({ children }) => {
   const email = sessionStorage.getItem("email");
   const uid = sessionStorage.getItem("uid");
   const username = sessionStorage.getItem("username");
-  const user = { email, uid, username };
+  const ethnicity = sessionStorage.getItem("ethnicity");
+  const user = { email, uid, username, ethnicity };
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };

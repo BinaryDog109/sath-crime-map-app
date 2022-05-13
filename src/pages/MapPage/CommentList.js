@@ -4,6 +4,7 @@ import {
   Divider,
   FormControl,
   InputLabel,
+  Link,
   List,
   ListItem,
   MenuItem,
@@ -20,13 +21,15 @@ import { Comments } from "./Comments";
 
 export const CommentList = ({ selectedMarkers }) => {
   const user = useUserContext();
+  const {uid} = user
+  console.log({uid})
   const [open, setOpen] = useState(false);
   const [selectedCrime, setSelectedCrime] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   // console.log({ selectedMarkers });
   return (
     <>
-      {user && (
+      {uid && (
         <CommentFormModal
           user={user}
           open={open}
@@ -69,7 +72,7 @@ export const CommentList = ({ selectedMarkers }) => {
           </Select>
         </FormControl>
       </Box>
-      {user? (
+      {uid? (
         <Button
           disabled={!selectedCrime}
           onClick={() => {
@@ -80,7 +83,7 @@ export const CommentList = ({ selectedMarkers }) => {
         >
           Add a comment
         </Button>
-      ) : <Typography>Please login so you can comment!</Typography>}
+      ) : <Typography>Please <Link href="/login">login</Link> first so that you can comment!</Typography>}
       {useMemo(
         () => selectedCrime && <Comments selectedCrime={selectedCrime} />,
         [selectedCrime]

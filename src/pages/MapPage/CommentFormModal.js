@@ -82,7 +82,7 @@ export const CommentFormModal = ({
     setInputErros([...errors]);
     return errors.length === 0;
   };
-  
+  // console.log({user})
   
   const handleSubmit = (e) => {
     setInputErros([]);
@@ -94,7 +94,8 @@ export const CommentFormModal = ({
         ...form,
         crimeId: selectedCrime,
         uid: user.uid,
-        username: user.username
+        username: user.username,
+        ethnicity: user.ethnicity
       });
       reset();
       setOpen(false)
