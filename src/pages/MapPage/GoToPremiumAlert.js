@@ -7,10 +7,11 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const GoToPremiumAlert = ({open, setOpen}) => {
   
-
+  const navigate = useNavigate()
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -35,7 +36,7 @@ export const GoToPremiumAlert = ({open, setOpen}) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Take me to Premium!</Button>
+        <Button onClick={()=>navigate("/price")}>Take me to Premium!</Button>
         <Button onClick={handleClose} autoFocus>
           Nah
         </Button>

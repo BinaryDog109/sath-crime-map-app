@@ -9,7 +9,7 @@ import {
   ListItem,
   MenuItem,
   Select,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { CommentFormModal } from "./CommentFormModal";
@@ -19,12 +19,12 @@ import { useUserContext } from "../../hooks/useUserContext";
 import { projectFirestore } from "../../firebase/config";
 import { Comments } from "./Comments";
 
-export const CommentList = ({ selectedMarkers }) => {
+export const CommentList = ({ selectedMarkers, selectedCrime, setSelectedCrime }) => {
   const user = useUserContext();
-  const {uid} = user
-  console.log({uid})
+  const { uid } = user;
+  // console.log({ uid });
   const [open, setOpen] = useState(false);
-  const [selectedCrime, setSelectedCrime] = useState("");
+  
   const [selectedLocation, setSelectedLocation] = useState("");
   // console.log({ selectedMarkers });
   return (
@@ -72,7 +72,7 @@ export const CommentList = ({ selectedMarkers }) => {
           </Select>
         </FormControl>
       </Box>
-      {uid? (
+      {uid ? (
         <Button
           disabled={!selectedCrime}
           onClick={() => {
@@ -83,7 +83,11 @@ export const CommentList = ({ selectedMarkers }) => {
         >
           Add a comment
         </Button>
-      ) : <Typography>Please <Link href="/login">login</Link> first so that you can comment!</Typography>}
+      ) : (
+        <Typography>
+          Please <Link href="/login">login</Link> first so that you can comment!
+        </Typography>
+      )}
       {useMemo(
         () => selectedCrime && <Comments selectedCrime={selectedCrime} />,
         [selectedCrime]

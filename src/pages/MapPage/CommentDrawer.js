@@ -32,6 +32,7 @@ const Puller = styled(Box)(({ theme }) => ({
 export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
   // console.log({ selectedMarkers, overflow });
   const [open, setOpen] = useState(false);
+  const [selectedCrime, setSelectedCrime] = useState("");
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -97,8 +98,8 @@ export function CommentDrawer({ overflow = "visible", selectedMarkers }) {
           >
             <CommentDrawerTabs tabNames={["Details", "Comments", "Stats"]}>
               <CrimeDetailChips selectedMarkers={selectedMarkers} />
-              <CommentList selectedMarkers={selectedMarkers} />
-              <CrimeVictimRaceStats />
+              <CommentList selectedCrime={selectedCrime} setSelectedCrime={setSelectedCrime} selectedMarkers={selectedMarkers} />
+              <CrimeVictimRaceStats crimeId={selectedCrime} /> 
             </CommentDrawerTabs>
           </StyledBox>
         </SwipeableDrawer>

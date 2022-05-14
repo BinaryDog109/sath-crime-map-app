@@ -36,7 +36,7 @@ export const CommentListItem = ({ data }) => {
           </Text>
 
           <Text color="gray.500">{data.comment}</Text>
-          {<span>{ratingMap[data.rating].icon}</span>}
+          {<span>{ratingMap[data.rating] && ratingMap[data.rating].icon}</span>}
           <Text
             m={0}
             color="gray"

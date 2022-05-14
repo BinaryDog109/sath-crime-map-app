@@ -76,18 +76,19 @@ export const CommentFormModal = ({
     if (form.title.length > 140 || form.comment.length > 140) {
       errors.push("The num of words is above 140");
     }
-    if (form.ratingLabel === "unknown") {
+    if (form.rating === "unknown") {
       errors.push("Please select one of the three faces");
     }
     setInputErros([...errors]);
     return errors.length === 0;
   };
   // console.log({user})
-  
+  // console.log({form})
   const handleSubmit = (e) => {
     setInputErros([]);
     e.preventDefault();
     const validated = validate(form);
+    console.log(validated)
     if (!validated) return;
     else {
       addDoc({

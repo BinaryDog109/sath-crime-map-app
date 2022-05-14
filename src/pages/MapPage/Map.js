@@ -106,8 +106,8 @@ export const Map = ({ setSelectedMarkers }) => {
         marker.addListener("click", (e) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => [marker]);
-          const { lat, lng } = marker.position;
-          console.log({ lat: lat(), lng: lng(), type: marker.crimeType, id: marker.crimeId });
+          // const { lat, lng } = marker.position;
+          // console.log({ lat: lat(), lng: lng(), type: marker.crimeType, id: marker.crimeId });
         });
         // Adding additional properties
         marker.crimeDetail = crime.detail;
@@ -129,10 +129,10 @@ export const Map = ({ setSelectedMarkers }) => {
         onClusterClick: (_, cluster, __) => {
           setSelectedMarkers(() => null);
           setSelectedMarkers(() => cluster.markers);
-          cluster.markers.forEach((marker) => {
-            const { lat, lng } = marker.position;
-            console.log({ lat: lat(), lng: lng(), type: marker.crimeType });
-          });
+          // cluster.markers.forEach((marker) => {
+          //   const { lat, lng } = marker.position;
+          //   console.log({ lat: lat(), lng: lng(), type: marker.crimeType });
+          // });
         },
       });
       // Optimisation: add the markers only after previous are cleared and tiles are loaded
