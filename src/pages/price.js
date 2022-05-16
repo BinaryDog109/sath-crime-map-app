@@ -18,6 +18,8 @@ import Navbar from '../components/navbar'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
+import IconButton from '@mui/material/IconButton'
+import LocalCafeOutlinedIcon from '@mui/icons-material/LocalCafeOutlined'
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -99,7 +101,7 @@ const tiers = [
 
 function PricingContent(props) {
     const navigate = useNavigate()
-    const handleFree = () =>{
+    const handleFree = () => {
         navigate('/login')
     }
     return (
@@ -110,7 +112,7 @@ function PricingContent(props) {
                 <AppBar><Navbar /></AppBar></ElevationScroll>
 
             {/* Hero unit */}
-            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 9 }}>
+            <Container disableGutters component="main" sx={{ pt: 9 }}>
                 <Typography
                     component="h4"
                     variant="h4"
@@ -121,7 +123,6 @@ function PricingContent(props) {
                     Pricing
                 </Typography>
                 <Typography variant="h7" align="center" color="text.secondary" component="p" sx={{
-                    mb: 3,
                     ml: 2,
                     mr: 2
                 }}>
@@ -130,8 +131,8 @@ function PricingContent(props) {
                 </Typography>
             </Container>
             {/* End hero unit */}
-            <Container maxWidth="md" component="main">
-                <Grid container spacing={5} alignItems="flex-end">
+            <Container component="main">
+                <Grid container alignItems="flex-end">
                     {tiers.map((tier) => (
                         // Enterprise card is full width at sm breakpoint
                         <Grid
@@ -140,6 +141,9 @@ function PricingContent(props) {
                             xs={12}
                             sm={tier.title === 'Enterprise' ? 12 : 6}
                             md={4}
+                            sx={{
+                                mt:3
+                            }}
                         >
                             <Card>
                                 <CardHeader
@@ -191,7 +195,7 @@ function PricingContent(props) {
                                         fullWidth
                                         variant={tier.buttonVariant}
                                         onClick={tier.title === 'Free' ? handleFree : null}
-                                      
+
                                     >
                                         {tier.buttonText}
                                     </Button>
@@ -199,9 +203,15 @@ function PricingContent(props) {
                             </Card>
                         </Grid>
                     ))}
+                    <Grid xs={12} align="center" sx={{
+                        mt: 3
+                    }}>
+                        <Button  variant="contained" color='secondary' startIcon={<LocalCafeOutlinedIcon />}>Buy me a coffe</Button>
+                    </Grid>
                 </Grid>
             </Container>
-            <Copyright sx={{ mt: 5 }} />
+
+            <Copyright sx={{ mt: 5,}} />
             {/* End footer */}
         </React.Fragment>
     )
