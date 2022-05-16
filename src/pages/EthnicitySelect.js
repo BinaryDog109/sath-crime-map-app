@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, Button, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material'
 import EthnicityOption from "../components/EthnicityOption"
 import { useNavigate } from 'react-router-dom'
 import axios from "axios"
@@ -46,7 +46,7 @@ function EthnicitySelect() {
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={12}>
                         <RadioGroup name="ethnicity-select-radio-group" defaultValue="optOut">
-                            <FormControlLabel value="White" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="White" emoji="🧑🏻👩🏻" />} style={{ justifyContent: "center" }} />
+                            <FormControlLabel value="White" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="White " emoji="🧑🏻👩🏻" />} style={{ justifyContent: "center" }} />
                             <FormControlLabel value="Black" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Black" emoji="🧑🏿👩🏿" />} style={{ justifyContent: "center" }} />
                             <FormControlLabel value="Asia" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Asian" emoji="🧑👩" />} style={{ justifyContent: "center" }} />
                             <FormControlLabel value="Mixed" control={<Radio />} labelPlacement="start" label={<EthnicityOption ethnicity="Mixed" emoji="👨🏽👩🏽" />} style={{ justifyContent: "center" }} />
@@ -56,7 +56,11 @@ function EthnicitySelect() {
                     </Grid>
                 </Grid>
             </FormControl>
-
+            <FormControlLabel
+            sx={{ml:3,mb:3}}
+              control={<Checkbox value="remember" color="primary" />}
+              label="All the ethnicity collected will only be used for statistical purposes"
+            />
             {/** bottom row - submit button takes the user to the next page */}
             <Grid container direction="row" justifyContent="center" alignItems="center" style={{ marginBottom: 10 }}>
                 <Grid item xs={12} justifyContent="center">
