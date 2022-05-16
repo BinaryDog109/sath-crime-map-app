@@ -17,12 +17,13 @@ import Container from '@mui/material/Container'
 import Navbar from '../components/navbar'
 import useScrollTrigger from '@mui/material/useScrollTrigger'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href="">
+                SATH
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -61,10 +62,9 @@ const tiers = [
         title: 'Free',
         price: '0',
         description: [
-            '10 users included',
-            '2 GB of storage',
-            'Help center access',
-            'Email support',
+            'Free to use',
+            'Limited Map Function',
+            'Comment Funtion'
         ],
         buttonText: 'Sign up for free',
         buttonVariant: 'outlined',
@@ -72,33 +72,36 @@ const tiers = [
     {
         title: 'Pro',
         subheader: 'Most popular',
-        price: '15',
+        price: '4.99',
         description: [
-            '20 users included',
-            '10 GB of storage',
-            'Help center access',
-            'Priority email support',
+            'Full Map function',
+            'Comment Funtion',
+            'Safe path finder',
+            'No ads'
         ],
         buttonText: 'Get started',
         buttonVariant: 'contained',
     },
-    {
-        title: 'Enterprise',
-        price: '30',
-        description: [
-            '50 users included',
-            '30 GB of storage',
-            'Help center access',
-            'Phone & email support',
-        ],
-        buttonText: 'Contact us',
-        buttonVariant: 'outlined',
-    },
+    // {
+    //     title: 'Plus',
+    //     price: '',
+    //     description: [
+    //         'Full Map function',
+    //         'Comment Funtion',
+    //         ''
+    //     ],
+    //     buttonText: 'Contact us',
+    //     buttonVariant: 'outlined',
+    // },
 ]
 
 
 
 function PricingContent(props) {
+    const navigate = useNavigate()
+    const handleFree = () =>{
+        navigate('/login')
+    }
     return (
         <React.Fragment>
             <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
@@ -107,20 +110,23 @@ function PricingContent(props) {
                 <AppBar><Navbar /></AppBar></ElevationScroll>
 
             {/* Hero unit */}
-            <Container disableGutters maxWidth="sm" component="main" sx={{ p: 7 }}>
+            <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 9 }}>
                 <Typography
-                    component="h3"
-                    variant="h3"
+                    component="h4"
+                    variant="h4"
                     align="center"
                     color="text.primary"
                     gutterBottom
                 >
                     Pricing
                 </Typography>
-                <Typography variant="h6" align="center" color="text.secondary" component="p">
-                    Quickly build an effective pricing table for your potential customers with
-                    this layout. It&apos;s built with default MUI components with little
-                    customization.
+                <Typography variant="h7" align="center" color="text.secondary" component="p" sx={{
+                    mb: 3,
+                    ml: 2,
+                    mr: 2
+                }}>
+                    It is free to use most of the funtions. We also have servel plans for you to select to have a better experience.
+
                 </Typography>
             </Container>
             {/* End hero unit */}
@@ -161,7 +167,7 @@ function PricingContent(props) {
                                         }}
                                     >
                                         <Typography component="h2" variant="h3" color="text.primary">
-                                            ${tier.price}
+                                            £{tier.price}
                                         </Typography>
                                         <Typography variant="h6" color="text.secondary">
                                             /mo
@@ -171,7 +177,7 @@ function PricingContent(props) {
                                         {tier.description.map((line) => (
                                             <Typography
                                                 component="li"
-                                                variant="subtitle1"
+                                                variant="subtitle"
                                                 align="center"
                                                 key={line}
                                             >
@@ -181,7 +187,12 @@ function PricingContent(props) {
                                     </ul>
                                 </CardContent>
                                 <CardActions>
-                                    <Button fullWidth variant={tier.buttonVariant}>
+                                    <Button
+                                        fullWidth
+                                        variant={tier.buttonVariant}
+                                        onClick={tier.title === 'Free' ? handleFree : null}
+                                      
+                                    >
                                         {tier.buttonText}
                                     </Button>
                                 </CardActions>

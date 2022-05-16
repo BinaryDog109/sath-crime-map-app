@@ -1,7 +1,7 @@
 /*
  * @Author: Liusong He
  * @Date: 2022-04-25 18:07:07
- * @LastEditTime: 2022-05-13 19:42:09
+ * @LastEditTime: 2022-05-16 17:16:53
  * @FilePath: \6214\src\pages\login.js
  * @Email: lh2u21@soton.ac.uk
  * @Description: 
@@ -54,11 +54,6 @@ export default function SignIn() {
       // navigate('/user_page')
     }
   })
-  const [emptyItem, setEmptyItem] = React.useState(false)
-
-  const handleClose = () => {
-    setEmptyItem(false)
-  }
 
   //switch mode depend on system setting 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
@@ -168,7 +163,7 @@ export default function SignIn() {
 
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-password" variant="body2">
+                <Link href="" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
@@ -180,16 +175,6 @@ export default function SignIn() {
             </Grid>
           </Box>
         </Box>
-        <Snackbar
-          open={emptyItem}
-          autoHideDuration={3000}
-          onClose={handleClose}
-          severity="info"
-        >
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-            Please verify your email first
-          </Alert>
-        </Snackbar>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
