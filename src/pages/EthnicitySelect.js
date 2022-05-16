@@ -17,6 +17,7 @@ function EthnicitySelect() {
                     uid: sessionStorage.getItem('uid'),
                     ethnicity: event.target[i].value,
                 })
+                break
             }
         }
 
@@ -58,7 +59,7 @@ function EthnicitySelect() {
             </FormControl>
             <FormControlLabel
             sx={{ml:3,mb:3}}
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox value='checkbox' color="primary" />}
               label="All the ethnicity collected will only be used for statistical purposes"
             />
             {/** bottom row - submit button takes the user to the next page */}
